@@ -1,24 +1,12 @@
 ﻿using MALSharp.Models.Shared;
 using System;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace MALSharp.Models.Converters;
 
-public class RelationTypeConverter : JsonConverter<RelationType>
+public class RelationTypeConverter : BaseEnumConverter<RelationType>
 {
-    public override RelationType Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-    {
-        ConvertHelper.CheckString(reader);
-        return StringToEnum(reader.GetString());
-    }
-
-    public override void Write(Utf8JsonWriter writer, RelationType value, JsonSerializerOptions options)
-    {
-        writer.WriteStringValue(EnumToString(value));
-    }
-
-    public static RelationType StringToEnum(string? value) => value switch
+    public override RelationType StringToEnum(string? value) => value switch
     {
         "sequel" => RelationType.Sequel,
         "prequel" => RelationType.Prequel,
@@ -34,7 +22,7 @@ public class RelationTypeConverter : JsonConverter<RelationType>
         _ => throw new JsonException($"Invalid value '{value ?? "null"}' for enum {typeof(RelationType).Name}.")
     };
 
-    public static string EnumToString(RelationType value) => value switch
+    public override string EnumToString(RelationType value) => value switch
     {
         RelationType.Sequel => "sequel",
         RelationType.Prequel => "prequel",
