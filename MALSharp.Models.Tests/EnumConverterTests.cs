@@ -118,6 +118,15 @@ public class EnumConverterTests
     public void RelationTypeConverter_parsing_error_tests()
         => ErrorInnerTests(new RelationTypeConverter());
 
+    [TestCase(Role.Main, "Main")]
+    [TestCase(Role.Supporting, "Supporting")]
+    public void RoleConverter_tests(Role value, string strValue)
+    => InnerTest(new RoleConverter(), value, strValue);
+
+    [Test]
+    public void RoleConverter_parsing_error_tests()
+        => ErrorInnerTests(new RoleConverter());
+
     [TestCase(Season.Winter, "winter")]
     [TestCase(Season.Spring, "spring")]
     [TestCase(Season.Summer, "summer")]
