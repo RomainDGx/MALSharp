@@ -16,7 +16,7 @@ public class RelationTypeConverter : BaseEnumConverter<RelationType>
         "parent_story" => RelationType.ParentStory,
         "summary" => RelationType.Summary,
         "full_story" => RelationType.FullStory,
-        "spin_off" => RelationType.SideStory,
+        "spin_off" => RelationType.SpinOff,
         "character" => RelationType.Character,
         "other" => RelationType.Other,
         _ => throw new JsonException($"Invalid value '{value ?? "null"}' for enum {typeof(RelationType).Name}.")
