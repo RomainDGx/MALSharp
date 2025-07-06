@@ -1,5 +1,4 @@
 ﻿using MALSharp.Models.Shared;
-using System;
 using System.Text.Json;
 
 namespace MALSharp.Models.Converters;
@@ -35,6 +34,6 @@ public class RelationTypeConverter : BaseEnumConverter<RelationType>
         RelationType.SpinOff => "spin_off",
         RelationType.Character => "character",
         RelationType.Other => "other",
-        _ => throw new ArgumentException($"Invalid value '{value}' for enum {typeof(RelationType).Name}.")
+        _ => throw new JsonException($"Invalid value '{value}' for enum {typeof(RelationType).Name}.")
     };
 }
