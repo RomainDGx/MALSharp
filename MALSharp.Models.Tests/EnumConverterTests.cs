@@ -1,5 +1,6 @@
 ﻿using MALSharp.Models.Anime;
 using MALSharp.Models.Converters;
+using MALSharp.Models.Manga;
 using MALSharp.Models.Shared;
 using NUnit.Framework;
 using System;
@@ -77,6 +78,32 @@ public class EnumConverterTests
     public void DayOfTheWeekConverter_parsing_error_tests()
         => ErrorInnerTests(new DayOfTheWeekConverter());
 
+    [TestCase(MangaStatus.Finished, "finished")]
+    [TestCase(MangaStatus.CurrentlyPublishing, "currently_publishing")]
+    [TestCase(MangaStatus.NotYetPublished, "not_yet_published")]
+    public void MangaStatusConverter_tests(MangaStatus value, string strValue)
+        => InnerTest(new MangaStatusConverter(), value, strValue);
+
+    [Test]
+    public void MangaStatusConverter_parsing_error_tests()
+        => ErrorInnerTests(new MangaStatusConverter());
+
+    [TestCase(MangaType.Unknown, "unknown")]
+    [TestCase(MangaType.Manga, "manga")]
+    [TestCase(MangaType.Novel, "novel")]
+    [TestCase(MangaType.OneShot, "one_shot")]
+    [TestCase(MangaType.Doujinshi, "doujinshi")]
+    [TestCase(MangaType.Manhwa, "manhwa")]
+    [TestCase(MangaType.Manhua, "manhua")]
+    [TestCase(MangaType.Oel, "oel")]
+    [TestCase(MangaType.LightNovel, "light_novel")]
+    public void MangaTypeConverter_tests(MangaType value, string strValue)
+        => InnerTest(new MangaTypeConverter(), value, strValue);
+
+    [Test]
+    public void MangaTypeConverter_parsing_error_tests()
+        => ErrorInnerTests(new MangaTypeConverter());
+
     [TestCase(Nsfw.White, "white")]
     [TestCase(Nsfw.Gray, "gray")]
     [TestCase(Nsfw.Black, "black")]
@@ -99,6 +126,18 @@ public class EnumConverterTests
     [Test]
     public void RatingConverter_parsing_error_tests()
         => ErrorInnerTests(new RatingConverter());
+
+    [TestCase(ReadingStatus.Reading, "reading")]
+    [TestCase(ReadingStatus.Completed, "completed")]
+    [TestCase(ReadingStatus.OnHold, "on_hold")]
+    [TestCase(ReadingStatus.Dropped, "dropped")]
+    [TestCase(ReadingStatus.PlanToRead, "plan_to_read")]
+    public void ReadingStatusConverter_tests(ReadingStatus value, string strValue)
+        => InnerTest(new ReadingStatusConverter(), value, strValue);
+
+    [Test]
+    public void ReadingStatusConverter_parsing_error_tests()
+        => ErrorInnerTests(new ReadingStatusConverter());
 
     [TestCase(RelationType.Sequel, "sequel")]
     [TestCase(RelationType.Prequel, "prequel")]
@@ -159,7 +198,7 @@ public class EnumConverterTests
         ShouldWorkWithJsonSerializer(converter, value);
     }
 
-    static void ShouldWorkWithUtf8JsonReaderAndWriter<T>(BaseEnumConverter<T> converter, T value) where T: struct, Enum
+    static void ShouldWorkWithUtf8JsonReaderAndWriter<T>(BaseEnumConverter<T> converter, T value) where T : struct, Enum
     {
         var options = new JsonSerializerOptions();
         using var stream = new MemoryStream();
