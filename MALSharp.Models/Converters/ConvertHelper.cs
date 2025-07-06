@@ -24,7 +24,7 @@ internal static class ConvertHelper
     /// </summary>
     /// <param name="reader">The JSON reader to check.</param>
     /// <exception cref="JsonException">Thrown when the JSON token is not a number.</exception>
-    public static void CheckNumber(in Utf8JsonReader reader)
+    internal static void CheckNumber(in Utf8JsonReader reader)
     {
         if (reader.TokenType is not JsonTokenType.Number)
         {
