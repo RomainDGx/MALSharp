@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MALSharp.Client;
 
-public sealed class MALClient : IMALClient
+public sealed partial class MALClient : IMALClient
 {
     readonly HttpClient _http;
     readonly MALClientOptions _options;
