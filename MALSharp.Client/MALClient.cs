@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Runtime.CompilerServices;
@@ -81,4 +82,23 @@ public sealed partial class MALClient : IMALClient
             throw new MALClientException(response.StatusCode, null, "An error has occured while parsing response error content.");
         }
     }
+
+    static string CheckPositive(int value, string paramName)
+    {
+        if (value < 0)
+        {
+            throw new ArgumentException("Parameter cannot be negative or zero.", paramName);
+        }
+        return value.ToString();
+    }
+
+    static string CheckStringParameter(string value, string paramName)
+    {
+        if (string.IsNullOrEmpty(value = value.Trim()))
+        {
+            throw new ArgumentException("Parameter cannot be null, empty or white space.", paramName);
+        }
+        return value;
+    }
+
 }

@@ -20,4 +20,10 @@ public class MALClientOptions
     /// Does not affect deserialization of incoming JSON.
     /// </summary>
     public JavaScriptEncoder JavaScriptEncoder { get; set; } = JavaScriptEncoder.Default;
+
+    /// <summary>
+    /// If true, the client will explicitly include all requested fields in the API request URL,
+    /// making it clear which data will be retrieved, even for fields that MyAnimeList returns by default.
+    /// </summary>
+    public bool ExplicitFields { get; set; } = false;
 }
