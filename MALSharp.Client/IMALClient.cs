@@ -1,7 +1,9 @@
 ﻿using MALSharp.Client.Anime;
+using MALSharp.Client.Manga;
 using MALSharp.Client.User;
 using MALSharp.Models.Anime;
 using MALSharp.Models.Forum;
+using MALSharp.Models.Manga;
 using MALSharp.Models.User;
 using System.Collections.Generic;
 using System.Threading;
@@ -131,6 +133,26 @@ public interface IMALClient
                                                           int limit = 100,
                                                           int offset = 0,
                                                           CancellationToken token = default);
+    #endregion
+
+    #region Manga
+    IAsyncEnumerable<Models.Manga.Manga> SearchMangaAsync(string search,
+                                                          int limit = 100,
+                                                          int offset = 0,
+                                                          bool nsfw = false,
+                                                          MangaListFieldsBuilder? fields = null,
+                                                          CancellationToken token = default);
+
+    Task<Models.Manga.Manga?> GetMangaAsync(int mangaId,
+                                            MangaFieldsBuilder? fields = null,
+                                            CancellationToken token = default);
+
+    IAsyncEnumerable<Ranked<Models.Manga.Manga>> GetMangaRanking(MangaRankingType rankingType,
+                                                                 int limit = 100,
+                                                                 int offset = 0,
+                                                                 bool nsfw = false,
+                                                                 MangaListFieldsBuilder? fields = null,
+                                                                 CancellationToken token = default);
     #endregion
 
     #region User
