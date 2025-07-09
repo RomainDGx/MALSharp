@@ -1,4 +1,5 @@
 ﻿using MALSharp.Models.Anime;
+using MALSharp.Models.Manga;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -83,6 +84,24 @@ internal class MALUriBuilder
         }
         return this;
     }
+
+    internal MALUriBuilder AddReadingStatus(ReadingStatus? status)
+    {
+        if (status.HasValue)
+        {
+            Add("status", status.Value switch
+            {
+                ReadingStatus.Reading => "reading",
+                ReadingStatus.Completed => "completed",
+                ReadingStatus.OnHold => "on_hold",
+                ReadingStatus.Dropped => "dropped",
+                ReadingStatus.PlanToRead => "plan_to_read",
+                _ => throw new InvalidEnumArgumentException(nameof(status), (int)status, typeof(ReadingStatus))
+            });
+        }
+        return this;
+    }
+
     internal string Build()
     {
         var builder = new StringBuilder(_path);

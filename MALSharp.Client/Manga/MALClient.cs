@@ -84,4 +84,58 @@ public partial class MALClient
 
         return ExecuteListRequestAsync<Ranked<Models.Manga.Manga>>(uri, limit, token);
     }
+
+    public Task<MangaListStatus> UpdateMyMangaListAsync(int mangaId,
+                                                        ReadingStatus? status = null,
+                                                        bool? isReading = null,
+                                                        int? score = null,
+                                                        int? numVolumesRead = null,
+                                                        int? numChaptersRead = null,
+                                                        int? priority = null,
+                                                        int? numTimesReread = null,
+                                                        int? rereadValue = null,
+                                                        string? tags = null,
+                                                        string? comments = null,
+                                                        CancellationToken token = default)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task DeleteMyMangaListItemAsync(int mangaId,
+                                           CancellationToken token = default)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async IAsyncEnumerable<UserMangaListItem> GetUserMangaListAsync(string userName = "@me",
+                                                                           ReadingStatus? status = null,
+                                                                           MangaListSort sort = MangaListSort.MangaTitle,
+                                                                           int limit = 100,
+                                                                           int offset = 0,
+                                                                           bool nsfw = false,
+                                                                           UserMangaListFieldsBuilder? fields = null,
+                                                                           [EnumeratorCancellation] CancellationToken token = default)
+    {
+        var uri = new MALUriBuilder($"users/{CheckStringParameter(userName, nameof(userName))}/mangalist")
+            .AddReadingStatus(status)
+            .Add("sort", sort switch
+            {
+                MangaListSort.ListScore => "list_score",
+                MangaListSort.ListUpdatedAt => "list_updated_at",
+                MangaListSort.MangaTitle => "manga_title",
+                MangaListSort.MangaStartDate => "manga_start_date",
+                MangaListSort.MangaId => "manga_id",
+                _ => throw new InvalidEnumArgumentException(nameof(sort), (int)sort, typeof(MangaListSort))
+            })
+            .AddLimit(limit, 1000)
+            .AddOffset(offset)
+            .AddNsfw(nsfw)
+            .AddFields(fields, _options.ExplicitFields)
+            .Build();
+
+        await foreach (var manga in ExecuteListRequestAsync<UserMangaListItem>(uri, limit, token))
+        {
+            yield return manga;
+        }
+    }
 }

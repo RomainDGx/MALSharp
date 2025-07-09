@@ -155,6 +155,45 @@ public interface IMALClient
                                                                  CancellationToken token = default);
     #endregion
 
+    #region Manga list
+    /// <summary>
+    /// Add specified manga to my manga list.
+    /// If specified manga already exists, update its status.
+    /// This endpoint updates only values specified by the parameter.
+    /// </summary>
+    /// <param name="score">Value between 0 and 10.</param>
+    /// <param name="priority">Value between 0 and 2.</param>
+    /// <param name="rereadValue">Value between 0 and 5.</param>
+    Task<MangaListStatus> UpdateMyMangaListAsync(int mangaId,
+                                                 ReadingStatus? status = null,
+                                                 bool? isReading = null,
+                                                 int? score = null,
+                                                 int? numVolumesRead = null,
+                                                 int? numChaptersRead = null,
+                                                 int? priority = null,
+                                                 int? numTimesReread = null,
+                                                 int? rereadValue = null,
+                                                 string? tags = null,
+                                                 string? comments = null,
+                                                 CancellationToken token = default);
+
+    /// <summary>
+    /// If the specified manga does not exist in user's manga list, throw an error.
+    /// So be careful when retrying.
+    /// </summary>
+    Task DeleteMyMangaListItemAsync(int mangaId, CancellationToken token = default);
+
+    /// <param name="status">Filters returned manga list by these statuses. To return all manga, don't specify this field.</param>
+    IAsyncEnumerable<UserMangaListItem> GetUserMangaListAsync(string userName = "@me",
+                                                              ReadingStatus? status = null,
+                                                              MangaListSort sort = MangaListSort.MangaTitle,
+                                                              int limit = 100,
+                                                              int offset = 0,
+                                                              bool nsfw = false,
+                                                              UserMangaListFieldsBuilder? fields = null,
+                                                              CancellationToken token = default);
+    #endregion
+
     #region User
     Task<UserInformation> GetMyUserInformationsAsync(UserInformationFieldsBuilder? fields = null,
                                                      CancellationToken token = default);
