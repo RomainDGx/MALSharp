@@ -22,26 +22,25 @@ public partial class MALClient
                                                              int offset = 0,
                                                              CancellationToken token = default)
     {
-        var uri = new MALUriBuilder($"forum/topic/{CheckPositive(topicId, nameof(topicId))}")
+        var builder = new MALUriBuilder($"forum/topic/{CheckPositive(topicId, nameof(topicId))}")
             .AddLimit(limit, 100)
-            .AddOffset(offset)
-            .Build();
+            .SetOffset(offset);
 
         TopicDetail? topic = null;
-        var counter = 0;
 
         try
         {
-            while (!token.IsCancellationRequested && counter < limit)
+            while (!token.IsCancellationRequested && limit > 0)
             {
-                var content = await ExecuteRequestAsync<TopicDetailPayload>(HttpMethod.Get, uri, token).ConfigureAwait(false);
+                var content = await ExecuteRequestAsync<TopicDetailPayload>(HttpMethod.Get, builder.Build(), token).ConfigureAwait(false);
 
                 if (topic is null)
                 {
                     topic = content.Topic;
-                    counter += topic.Posts.Count;
+                    limit -= topic.Posts.Count;
+                    offset += topic.Posts.Count;
 
-                    if (counter >= limit)
+                    if (limit <= 0)
                     {
                         break;
                     }
@@ -52,17 +51,19 @@ public partial class MALClient
                     {
                         topic.Posts.Add(post);
 
-                        if (++counter >= limit)
+                        if (--limit <= 0)
                         {
                             return topic;
                         }
+                        offset++;
                     }
                 }
                 if (string.IsNullOrEmpty(content.Paging.Next))
                 {
                     break;
                 }
-                uri = content.Paging.Next;
+                builder.SetLimit(limit)
+                       .SetOffset(offset);
 
                 await Task.Delay(_options.InterRequestDelay, token).ConfigureAwait(false);
             }
@@ -125,13 +126,11 @@ public partial class MALClient
                                                 int offset,
                                                 CancellationToken token = default)
     {
-        var uri = new MALUriBuilder("forum/topics")
+        var builder = new MALUriBuilder("forum/topics")
             .Add("sort", "recent")
             .Add(key, value)
-            .AddLimit(limit, 100)
-            .AddOffset(offset)
-            .Build();
+            .AddLimit(limit, 100);
 
-        return ExecuteListRequestAsync<Topic>(uri, limit, token);
+        return ExecuteListRequestAsync<Topic>(builder, limit, offset, token);
     }
 }

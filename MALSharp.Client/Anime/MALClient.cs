@@ -24,12 +24,10 @@ public partial class MALClient
         var uri = new MALUriBuilder("anime")
             .Add("q", search)
             .AddLimit(limit, 100)
-            .AddOffset(offset)
             .AddNsfw(nsfw)
-            .AddFields(fields, _options.ExplicitFields)
-            .Build();
+            .AddFields(fields, _options.ExplicitFields);
 
-        await foreach (var node in ExecuteListRequestAsync<NodePayload<Models.Anime.Anime>>(uri, limit, token))
+        await foreach (var node in ExecuteListRequestAsync<NodePayload<Models.Anime.Anime>>(uri, limit, offset, token))
         {
             yield return node.Node;
         }
@@ -66,7 +64,6 @@ public partial class MALClient
     {
         var uri = new MALUriBuilder("anime/ranking")
             .AddLimit(limit, 500)
-            .AddOffset(offset)
             .AddNsfw(nsfw)
             .AddFields(fields, _options.ExplicitFields)
             .Add("ranking_type", rankingType switch
@@ -81,10 +78,9 @@ public partial class MALClient
                 AnimeRankingType.ByPopularity => "bypopularity",
                 AnimeRankingType.Favorite => "favorite",
                 _ => throw new InvalidEnumArgumentException(nameof(rankingType), (int)rankingType, typeof(AnimeRankingType))
-            })
-            .Build();
+            });
 
-        return ExecuteListRequestAsync<Ranked<Models.Anime.Anime>>(uri, limit, token);
+        return ExecuteListRequestAsync<Ranked<Models.Anime.Anime>>(uri, limit, offset, token);
     }
 
     public async IAsyncEnumerable<Models.Anime.Anime> GetSeasonalAnimeAsync(int year,
@@ -104,12 +100,10 @@ public partial class MALClient
                 _ => throw new InvalidEnumArgumentException(nameof(SeasonalAnimeSort), (int)sort, typeof(SeasonalAnimeSort))
             })
             .AddLimit(limit, 500)
-            .AddOffset(offset)
             .AddNsfw(nsfw)
-            .AddFields(fields, _options.ExplicitFields)
-            .Build();
+            .AddFields(fields, _options.ExplicitFields);
 
-        await foreach (var anime in ExecuteListRequestAsync<NodePayload<Models.Anime.Anime>>(uri, limit, token))
+        await foreach (var anime in ExecuteListRequestAsync<NodePayload<Models.Anime.Anime>>(uri, limit, offset, token))
         {
             yield return anime.Node;
         }
@@ -123,12 +117,10 @@ public partial class MALClient
     {
         var uri = new MALUriBuilder("anime/suggestions")
             .AddLimit(limit, 100)
-            .AddOffset(offset)
             .AddNsfw(nsfw)
-            .AddFields(fields, _options.ExplicitFields)
-            .Build();
+            .AddFields(fields, _options.ExplicitFields);
 
-        await foreach (var anime in ExecuteListRequestAsync<NodePayload<Models.Anime.Anime>>(uri, limit, token))
+        await foreach (var anime in ExecuteListRequestAsync<NodePayload<Models.Anime.Anime>>(uri, limit, offset, token))
         {
             yield return anime.Node;
         }
@@ -140,13 +132,12 @@ public partial class MALClient
                                                                     CharacterListFieldsBuilder? fields = null,
                                                                     CancellationToken token = default)
     {
-        var uri = new MALUriBuilder($"anime/{CheckPositive(animeId, nameof(animeId))}/characters")
+        var builder = new MALUriBuilder($"anime/{CheckPositive(animeId, nameof(animeId))}/characters")
             .AddLimit(limit, 500)
-            .AddOffset(offset)
-            .AddFields(fields, _options.ExplicitFields)
-            .Build();
+            .SetOffset(offset)
+            .AddFields(fields, _options.ExplicitFields);
 
-        return ExecuteListRequestAsync<AnimeCharacter>(uri, limit, token);
+        return ExecuteListRequestAsync<AnimeCharacter>(builder, limit, offset, token);
     }
 
     public Task<Character?> GetCharacterAsync(int characterId,
@@ -213,12 +204,10 @@ public partial class MALClient
                 _ => throw new InvalidEnumArgumentException(nameof(sort), (int)sort, typeof(AnimeListSort))
             })
             .AddLimit(limit, 1000)
-            .AddOffset(offset)
             .AddNsfw(nsfw)
-            .AddFields(fields, _options.ExplicitFields)
-            .Build();
+            .AddFields(fields, _options.ExplicitFields);
 
-        await foreach (var anime in ExecuteListRequestAsync<UserAnimeListItem>(uri, limit, token))
+        await foreach (var anime in ExecuteListRequestAsync<UserAnimeListItem>(uri, limit, offset, token))
         {
             yield return anime;
         }

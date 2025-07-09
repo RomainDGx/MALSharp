@@ -25,32 +25,34 @@ public sealed partial class MALClient : IMALClient
         };
     }
 
-    async IAsyncEnumerable<T> ExecuteListRequestAsync<T>(string uri, int limit, [EnumeratorCancellation] CancellationToken token)
+    async IAsyncEnumerable<T> ExecuteListRequestAsync<T>(MALUriBuilder builder, int limit, int offset, [EnumeratorCancellation] CancellationToken token)
     {
         if (limit <= 0)
         {
             yield break;
         }
-        var counter = 0;
 
         while (!token.IsCancellationRequested)
         {
-            var content = await ExecuteRequestAsync<ResponseListPayload<T>>(HttpMethod.Get, uri, token).ConfigureAwait(false);
+            builder.SetLimit(limit)
+                   .SetOffset(offset);
+
+            var content = await ExecuteRequestAsync<ResponseListPayload<T>>(HttpMethod.Get, builder.Build(), token).ConfigureAwait(false);
 
             foreach (var item in content.Data)
             {
                 yield return item;
 
-                if (++counter >= limit)
+                if (--limit <= 0)
                 {
                     yield break;
                 }
+                offset++;
             }
             if (string.IsNullOrEmpty(content.Paging.Next))
             {
                 yield break;
             }
-            uri = content.Paging.Next;
 
             await Task.Delay(_options.InterRequestDelay, token).ConfigureAwait(false);
         }

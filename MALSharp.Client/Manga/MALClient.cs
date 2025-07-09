@@ -22,12 +22,10 @@ public partial class MALClient
         var uri = new MALUriBuilder("manga")
             .Add("q", search)
             .AddLimit(limit, 100)
-            .AddOffset(offset)
             .AddNsfw(nsfw)
-            .AddFields(fields, _options.ExplicitFields)
-            .Build();
+            .AddFields(fields, _options.ExplicitFields);
 
-        await foreach (var manga in ExecuteListRequestAsync<NodePayload<Models.Manga.Manga>>(uri, limit, token))
+        await foreach (var manga in ExecuteListRequestAsync<NodePayload<Models.Manga.Manga>>(uri, limit, offset, token))
         {
             yield return manga.Node;
         }
@@ -77,12 +75,10 @@ public partial class MALClient
                 _ => throw new InvalidEnumArgumentException(nameof(rankingType), (int)rankingType, typeof(MangaRankingType))
             })
             .AddLimit(limit, 500)
-            .AddOffset(offset)
             .AddNsfw(nsfw)
-            .AddFields(fields, _options.ExplicitFields)
-            .Build();
+            .AddFields(fields, _options.ExplicitFields);
 
-        return ExecuteListRequestAsync<Ranked<Models.Manga.Manga>>(uri, limit, token);
+        return ExecuteListRequestAsync<Ranked<Models.Manga.Manga>>(uri, limit, offset, token);
     }
 
     public Task<MangaListStatus> UpdateMyMangaListAsync(int mangaId,
@@ -128,12 +124,10 @@ public partial class MALClient
                 _ => throw new InvalidEnumArgumentException(nameof(sort), (int)sort, typeof(MangaListSort))
             })
             .AddLimit(limit, 1000)
-            .AddOffset(offset)
             .AddNsfw(nsfw)
-            .AddFields(fields, _options.ExplicitFields)
-            .Build();
+            .AddFields(fields, _options.ExplicitFields);
 
-        await foreach (var manga in ExecuteListRequestAsync<UserMangaListItem>(uri, limit, token))
+        await foreach (var manga in ExecuteListRequestAsync<UserMangaListItem>(uri, limit, offset, token))
         {
             yield return manga;
         }

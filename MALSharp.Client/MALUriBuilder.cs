@@ -11,6 +11,7 @@ internal class MALUriBuilder
 {
     readonly string _path;
     readonly Dictionary<string, string> _parameters;
+    int _limitMaxValue;
 
     internal MALUriBuilder(string path)
     {
@@ -24,15 +25,31 @@ internal class MALUriBuilder
         {
             throw new ArgumentOutOfRangeException(nameof(limit), "Limit cannot be negative or zero.");
         }
+        _limitMaxValue = maxValue;
         _parameters.Add("limit", int.Min(limit, maxValue).ToString());
         return this;
     }
 
-    internal MALUriBuilder AddOffset(int offset)
+    internal MALUriBuilder SetLimit(int limit)
+    {
+        if (limit <= 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(limit), "Limit cannot be negative or zero.");
+        }
+        _parameters["limit"] = int.Min(limit, _limitMaxValue).ToString();
+        return this;
+    }
+
+    internal MALUriBuilder SetOffset(int offset)
     {
         if (offset < 0)
         {
             throw new ArgumentOutOfRangeException(nameof(offset), "Offset cannot be negative.");
+        }
+        if (_parameters.ContainsKey("offset"))
+        {
+            _parameters["offset"] = offset.ToString();
+            return this;
         }
         _parameters.Add("offset", offset.ToString());
         return this;
