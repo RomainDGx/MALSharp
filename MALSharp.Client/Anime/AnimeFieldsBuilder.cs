@@ -6,7 +6,7 @@ namespace MALSharp.Client.Anime;
 public class AnimeFieldsBuilder : IFieldsBuilder
 {
     readonly HashSet<string> _fields;
-    AnimeMyListStatusFieldsBuilder<AnimeFieldsBuilder>? _myListStatus;
+    AnimeListStatusFieldsBuilder<AnimeFieldsBuilder>? _myListStatus;
     AnimeListFieldsBuilder<AnimeFieldsBuilder>? _relatedAnime;
     MangaListFieldsBuilder<AnimeFieldsBuilder>? _relatedManga;
     AnimeListFieldsBuilder<AnimeFieldsBuilder>? _recommendations;
@@ -20,7 +20,11 @@ public class AnimeFieldsBuilder : IFieldsBuilder
         _recommendations = null;
     }
     
-    bool IFieldsBuilder.IsEmpty => _fields.Count is 0 && _myListStatus is null;
+    bool IFieldsBuilder.IsEmpty => _fields.Count is 0
+                                && _myListStatus is null
+                                && _relatedAnime is null
+                                && _relatedManga is null
+                                && _recommendations is null;
 
     /// <summary>
     /// Add <see cref="Models.Anime.Anime.AlternativeTitles"/> field.
@@ -160,7 +164,7 @@ public class AnimeFieldsBuilder : IFieldsBuilder
     /// <summary>
     /// Add <see cref="Models.Anime.Anime.MyListStatus"/> field.
     /// </summary>
-    public AnimeMyListStatusFieldsBuilder<AnimeFieldsBuilder> AddMyListStatus()
+    public AnimeListStatusFieldsBuilder<AnimeFieldsBuilder> AddMyListStatus()
     {
         return _myListStatus ??= new(this);
     }

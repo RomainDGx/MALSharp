@@ -2,7 +2,7 @@
 
 internal interface IFieldsBuilder
 {
-    bool IsEmpty { get; }
+    internal bool IsEmpty { get; }
 
-    string Build(bool explicitFields);
+    internal string Build(bool explicitFields);
 }

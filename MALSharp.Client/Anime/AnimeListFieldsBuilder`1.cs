@@ -6,7 +6,7 @@ public class AnimeListFieldsBuilder<TParent>
 {
     readonly HashSet<string> _fields;
     readonly TParent _parent;
-    AnimeMyListStatusFieldsBuilder<AnimeListFieldsBuilder<TParent>>? _myListStatus;
+    AnimeListStatusFieldsBuilder<AnimeListFieldsBuilder<TParent>>? _myListStatus;
 
     internal AnimeListFieldsBuilder(TParent parent)
     {
@@ -157,7 +157,7 @@ public class AnimeListFieldsBuilder<TParent>
     /// <summary>
     /// Add <see cref="Models.Anime.Anime.MyListStatus"/> field.
     /// </summary>
-    public AnimeMyListStatusFieldsBuilder<AnimeListFieldsBuilder<TParent>> AddMyListStatus()
+    public AnimeListStatusFieldsBuilder<AnimeListFieldsBuilder<TParent>> AddMyListStatus()
     {
         return _myListStatus ??= new(this);
     }

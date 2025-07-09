@@ -5,7 +5,7 @@ namespace MALSharp.Client.Anime;
 public class AnimeListFieldsBuilder : IFieldsBuilder
 {
     readonly HashSet<string> _fields;
-    AnimeMyListStatusFieldsBuilder<AnimeListFieldsBuilder>? _myListStatus;
+    AnimeListStatusFieldsBuilder<AnimeListFieldsBuilder>? _myListStatus;
 
     public AnimeListFieldsBuilder()
     {
@@ -153,7 +153,7 @@ public class AnimeListFieldsBuilder : IFieldsBuilder
     /// <summary>
     /// Add <see cref="Models.Anime.Anime.MyListStatus"/> field.
     /// </summary>
-    public AnimeMyListStatusFieldsBuilder<AnimeListFieldsBuilder> AddMyListStatus()
+    public AnimeListStatusFieldsBuilder<AnimeListFieldsBuilder> AddMyListStatus()
     {
         return _myListStatus ??= new(this);
     }

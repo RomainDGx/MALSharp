@@ -2,12 +2,12 @@
 
 namespace MALSharp.Client.Anime;
 
-public class AnimeMyListStatusFieldsBuilder<TParent>
+public class AnimeListStatusFieldsBuilder<TParent>
 {
     readonly HashSet<string> _fields;
     readonly TParent _parent;
 
-    internal AnimeMyListStatusFieldsBuilder(TParent parent)
+    internal AnimeListStatusFieldsBuilder(TParent parent)
     {
         _fields = [];
         _parent = parent;
@@ -18,7 +18,7 @@ public class AnimeMyListStatusFieldsBuilder<TParent>
     /// <summary>
     /// Add <see cref="Models.Anime.AnimeListStatus.StartDate"/> field.
     /// </summary>
-    public AnimeMyListStatusFieldsBuilder<TParent> AddStartDate()
+    public AnimeListStatusFieldsBuilder<TParent> AddStartDate()
     {
         _fields.Add("start_date");
         return this;
@@ -27,7 +27,7 @@ public class AnimeMyListStatusFieldsBuilder<TParent>
     /// <summary>
     /// Add <see cref="Models.Anime.AnimeListStatus.FinishDate"/> field.
     /// </summary>
-    public AnimeMyListStatusFieldsBuilder<TParent> AddFinishDate()
+    public AnimeListStatusFieldsBuilder<TParent> AddFinishDate()
     {
         _fields.Add("finish_date");
         return this;
@@ -36,7 +36,7 @@ public class AnimeMyListStatusFieldsBuilder<TParent>
     /// <summary>
     /// Add <see cref="Models.Anime.AnimeListStatus.Priority"/> field.
     /// </summary>
-    public AnimeMyListStatusFieldsBuilder<TParent> AddPriority()
+    public AnimeListStatusFieldsBuilder<TParent> AddPriority()
     {
         _fields.Add("priority");
         return this;
@@ -45,7 +45,7 @@ public class AnimeMyListStatusFieldsBuilder<TParent>
     /// <summary>
     /// Add <see cref="Models.Anime.AnimeListStatus.NumTimesRewatched"/> field.
     /// </summary>
-    public AnimeMyListStatusFieldsBuilder<TParent> AddNumTimesRewatched()
+    public AnimeListStatusFieldsBuilder<TParent> AddNumTimesRewatched()
     {
         _fields.Add("num_times_rewatched");
         return this;
@@ -54,7 +54,7 @@ public class AnimeMyListStatusFieldsBuilder<TParent>
     /// <summary>
     /// Add <see cref="Models.Anime.AnimeListStatus.RewatchValue"/> field.
     /// </summary>
-    public AnimeMyListStatusFieldsBuilder<TParent> AddRewatchValue()
+    public AnimeListStatusFieldsBuilder<TParent> AddRewatchValue()
     {
         _fields.Add("rewatch_value");
         return this;
@@ -63,7 +63,7 @@ public class AnimeMyListStatusFieldsBuilder<TParent>
     /// <summary>
     /// Add <see cref="Models.Anime.AnimeListStatus.Tags"/> field.
     /// </summary>
-    public AnimeMyListStatusFieldsBuilder<TParent> AddTags()
+    public AnimeListStatusFieldsBuilder<TParent> AddTags()
     {
         _fields.Add("tags");
         return this;
@@ -72,7 +72,7 @@ public class AnimeMyListStatusFieldsBuilder<TParent>
     /// <summary>
     /// Add <see cref="Models.Anime.AnimeListStatus.Comments"/> field.
     /// </summary>
-    public AnimeMyListStatusFieldsBuilder<TParent> AddComments()
+    public AnimeListStatusFieldsBuilder<TParent> AddComments()
     {
         _fields.Add("comments");
         return this;
@@ -81,7 +81,7 @@ public class AnimeMyListStatusFieldsBuilder<TParent>
     /// <summary>
     /// Add all fields of <see cref="Models.Anime.AnimeListStatus"/>.
     /// </summary>
-    public AnimeMyListStatusFieldsBuilder<TParent> AddAll()
+    public AnimeListStatusFieldsBuilder<TParent> AddAll()
     {
         return AddStartDate()
               .AddFinishDate()
@@ -95,7 +95,7 @@ public class AnimeMyListStatusFieldsBuilder<TParent>
     /// <summary>
     /// Remove all previously added fields.
     /// </summary>
-    public AnimeMyListStatusFieldsBuilder<TParent> Clear()
+    public AnimeListStatusFieldsBuilder<TParent> Clear()
     {
         _fields.Clear();
         return this;

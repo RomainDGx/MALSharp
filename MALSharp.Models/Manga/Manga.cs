@@ -129,6 +129,9 @@ public class Manga : Node
     [JsonPropertyName("recommendations")]
     public List<Recommendation<Manga>>? Recommendations { get; set; }
 
+    /// <summary>
+    /// You cannot contain this field in a list.
+    /// </summary>
     [JsonPropertyName("serialization")]
     public List<SerializationItem>? Serialization { get; set; }
 }
