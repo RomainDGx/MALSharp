@@ -60,6 +60,45 @@ public interface IMALClient
                                        CancellationToken token = default);
     #endregion
 
+    #region Anime list
+    /// <summary>
+    /// Add specified anime to my anime list.
+    /// If specified anime already exists, update its status.
+    /// This endpoint updates only values specified by the parameter.
+    /// </summary>
+    /// <param name="score">Value between 0 and 10.</param>
+    /// <param name="priority">Value between 0 and 2.</param>
+    /// <param name="rewatchValue">Value between 0 and 5.</param>
+    /// <returns>An updated <see cref="AnimeListStatus"/>.</returns>
+    Task<AnimeListStatus> UpdateMyAnimeListStatusAsync(int animeId,
+                                                       WatchingStatus? status = null,
+                                                       bool? isRewatching = null,
+                                                       int? score = null,
+                                                       int? numWatchedEpisodes = null,
+                                                       int? priority = null,
+                                                       int? numTimesRewatched = null,
+                                                       int? rewatchValue = null,
+                                                       string? tags = null,
+                                                       string? comments = null,
+                                                       CancellationToken token = default);
+
+    /// <summary>
+    /// If the specified anime does not exist in user's anime list, throw an error.
+    /// So be careful when retrying.
+    /// </summary>
+    Task DeleteMyAnimeListItemAsync(int animeId, CancellationToken token = default);
+
+    /// <param name="status">Filters returned anime list by these statuses. To return all anime, don't specify this field.</param>
+    IAsyncEnumerable<UserAnimeListItem> GetUserAnimeListAsync(string userName = "@me",
+                                                              WatchingStatus? status = null,
+                                                              AnimeListSort sort = AnimeListSort.AnimeTitle,
+                                                              int limit = 100,
+                                                              int offset = 0,
+                                                              bool nsfw = false,
+                                                              UserAnimeListFieldsBuilder? fields = null,
+                                                              CancellationToken token = default);
+    #endregion
+
     #region Forum
     Task<IEnumerable<Category>> GetForumBoardsAsync(CancellationToken token = default);
 

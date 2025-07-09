@@ -1,6 +1,7 @@
 ﻿using MALSharp.Client.Anime;
 using MALSharp.Models.Anime;
 using MALSharp.Models.Converters;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Net;
@@ -167,6 +168,59 @@ public partial class MALClient
         catch
         {
             throw;
+        }
+    }
+
+    public Task<AnimeListStatus> UpdateMyAnimeListStatusAsync(int animeId,
+                                                              WatchingStatus? status = null,
+                                                              bool? isRewatching = null,
+                                                              int? score = null,
+                                                              int? numWatchedEpisodes = null,
+                                                              int? priority = null,
+                                                              int? numTimesRewatched = null,
+                                                              int? rewatchValue = null,
+                                                              string? tags = null,
+                                                              string? comments = null,
+                                                              CancellationToken token = default)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task DeleteMyAnimeListItemAsync(int animeId,
+                                           CancellationToken token = default)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async IAsyncEnumerable<UserAnimeListItem> GetUserAnimeListAsync(string userName = "@me",
+                                                                           WatchingStatus? status = null,
+                                                                           AnimeListSort sort = AnimeListSort.AnimeTitle,
+                                                                           int limit = 100,
+                                                                           int offset = 0,
+                                                                           bool nsfw = false,
+                                                                           UserAnimeListFieldsBuilder? fields = null,
+                                                                           [EnumeratorCancellation] CancellationToken token = default)
+    {
+        var uri = new MALUriBuilder($"users/{CheckStringParameter(userName, nameof(userName))}/animelist")
+            .AddWatchingStatus(status)
+            .Add("sort", sort switch
+            {
+                AnimeListSort.ListScore => "list_score",
+                AnimeListSort.ListUpdatedAt => "list_updated_at",
+                AnimeListSort.AnimeTitle => "anime_title",
+                AnimeListSort.AnimeStartDate => "anime_start_date",
+                AnimeListSort.AnimeId => "anime_id",
+                _ => throw new InvalidEnumArgumentException(nameof(sort), (int)sort, typeof(AnimeListSort))
+            })
+            .AddLimit(limit, 1000)
+            .AddOffset(offset)
+            .AddNsfw(nsfw)
+            .AddFields(fields, _options.ExplicitFields)
+            .Build();
+
+        await foreach (var anime in ExecuteListRequestAsync<UserAnimeListItem>(uri, limit, token))
+        {
+            yield return anime;
         }
     }
 }
