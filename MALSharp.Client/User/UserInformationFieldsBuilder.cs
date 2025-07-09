@@ -40,6 +40,9 @@ public class UserInformationFieldsBuilder : IFieldsBuilder
         return this;
     }
 
+    /// <summary>
+    /// Add all fields of <see cref="Models.User.UserInformation/>.
+    /// </summary>
     public UserInformationFieldsBuilder AddAll() => AddAnimeStatistics().AddTimeZone().AddIsSupporter();
 
     /// <summary>
