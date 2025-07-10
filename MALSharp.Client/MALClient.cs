@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
@@ -15,8 +16,9 @@ public sealed partial class MALClient : IMALClient, IDisposable
     readonly JsonSerializerOptions _serializationOptions;
     readonly bool _disposeHttpClient;
     readonly HttpClient _http;
+    readonly IAccessTokenProvider? _accessTokenProvider;
 
-    public MALClient(MALClientOptions options, HttpClient? httpClient = null)
+    public MALClient(MALClientOptions options, HttpClient? httpClient = null, IAccessTokenProvider? accessTokenProvider = null)
     {
         if (string.IsNullOrWhiteSpace(options.ClientId))
         {
@@ -39,6 +41,7 @@ public sealed partial class MALClient : IMALClient, IDisposable
         {
             _http.DefaultRequestHeaders.Add("X-MAL-CLIENT-ID", _options.ClientId);
         }
+        _accessTokenProvider = accessTokenProvider;
     }
 
     async IAsyncEnumerable<T> ExecuteListRequestAsync<T>(MALUriBuilder builder, int limit, int offset, [EnumeratorCancellation] CancellationToken token)
@@ -76,7 +79,7 @@ public sealed partial class MALClient : IMALClient, IDisposable
 
     async Task<T> ExecuteRequestAsync<T>(HttpMethod method, string uri, CancellationToken token)
     {
-        using var request = new HttpRequestMessage(method, uri);
+        using var request = await BuildRequestAsync(method, uri, token).ConfigureAwait(false);
 
         using var response = await _http.SendAsync(request, token).ConfigureAwait(false);
 
@@ -85,6 +88,21 @@ public sealed partial class MALClient : IMALClient, IDisposable
         var result = await response.Content.ReadFromJsonAsync<T>(_serializationOptions, token).ConfigureAwait(false);
 
         return result ?? throw new MALClientException(response.StatusCode, null, "An error has occured while parsing response content.");
+    }
+
+    async Task<HttpRequestMessage> BuildRequestAsync(HttpMethod method, string uri, CancellationToken token)
+    {
+        var request = new HttpRequestMessage(method, uri);
+
+        if (_accessTokenProvider is not null)
+        {
+            var accessToken = await _accessTokenProvider.GetAccessTokenAsync(token).ConfigureAwait(false);
+            if (accessToken is not null)
+            {
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+            }
+        }
+        return request;
     }
 
     async Task EnsureSuccessResponseAsync(HttpResponseMessage response, CancellationToken token)
