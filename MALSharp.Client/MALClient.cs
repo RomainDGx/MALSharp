@@ -9,20 +9,36 @@ using System.Threading.Tasks;
 
 namespace MALSharp.Client;
 
-public sealed partial class MALClient : IMALClient
+public sealed partial class MALClient : IMALClient, IDisposable
 {
-    readonly HttpClient _http;
     readonly MALClientOptions _options;
     readonly JsonSerializerOptions _serializationOptions;
+    readonly bool _disposeHttpClient;
+    readonly HttpClient _http;
 
-    public MALClient(HttpClient http, MALClientOptions options)
+    public MALClient(MALClientOptions options, HttpClient? httpClient = null)
     {
-        _http = http;
+        if (string.IsNullOrWhiteSpace(options.ClientId))
+        {
+            throw new ArgumentException("ClientId must be provided.", nameof(options));
+        }
+        if (!Uri.TryCreate(options.BaseUrl, UriKind.Absolute, out var uri))
+        {
+            throw new ArgumentException("BaseUrl must contains an absolute Uri.", nameof(options));
+        }
         _options = options;
         _serializationOptions = new JsonSerializerOptions
         {
             Encoder = _options.JavaScriptEncoder
         };
+        _disposeHttpClient = httpClient is null;
+        _http = httpClient ?? new HttpClient();
+        _http.BaseAddress ??= uri;
+        _http.Timeout = _options.Timeout;
+        if (!_http.DefaultRequestHeaders.Contains("X-MAL-CLIENT-ID"))
+        {
+            _http.DefaultRequestHeaders.Add("X-MAL-CLIENT-ID", _options.ClientId);
+        }
     }
 
     async IAsyncEnumerable<T> ExecuteListRequestAsync<T>(MALUriBuilder builder, int limit, int offset, [EnumeratorCancellation] CancellationToken token)
@@ -103,4 +119,11 @@ public sealed partial class MALClient : IMALClient
         return value;
     }
 
+    public void Dispose()
+    {
+        if (_disposeHttpClient)
+        {
+            _http.Dispose();
+        }
+    }
 }

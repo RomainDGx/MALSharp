@@ -134,7 +134,6 @@ public partial class MALClient
     {
         var builder = new MALUriBuilder($"anime/{CheckPositive(animeId, nameof(animeId))}/characters")
             .AddLimit(limit, 500)
-            .SetOffset(offset)
             .AddFields(fields, _options.ExplicitFields);
 
         return ExecuteListRequestAsync<AnimeCharacter>(builder, limit, offset, token);
