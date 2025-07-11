@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -18,7 +18,27 @@ public sealed partial class MALClient : IMALClient, IDisposable
     readonly HttpClient _http;
     readonly IAccessTokenProvider? _accessTokenProvider;
 
-    public MALClient(MALClientOptions options, HttpClient? httpClient = null, IAccessTokenProvider? accessTokenProvider = null)
+    public MALClient(MALClientOptions options)
+        : this(options, (IAccessTokenProvider?)null, null)
+    {
+    }
+
+    public MALClient(MALClientOptions options, HttpClient httpClient)
+        : this(options, null, httpClient)
+    {
+    }
+
+    public MALClient(MALClientOptions options, IAccessTokenProvider accessTokenProvider)
+        : this(options, accessTokenProvider, null)
+    {
+    }
+
+    public MALClient(MALClientOptions options, HttpClient httpClient, IAccessTokenProvider accessTokenProvider)
+        : this(options, accessTokenProvider, httpClient)
+    {
+    }
+
+    MALClient(MALClientOptions options, IAccessTokenProvider? accessTokenProvider, HttpClient? httpClient)
     {
         if (string.IsNullOrWhiteSpace(options.ClientId))
         {
