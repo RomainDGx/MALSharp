@@ -68,20 +68,9 @@ public interface IMALClient
     /// If specified anime already exists, update its status.
     /// This endpoint updates only values specified by the parameter.
     /// </summary>
-    /// <param name="score">Value between 0 and 10.</param>
-    /// <param name="priority">Value between 0 and 2.</param>
-    /// <param name="rewatchValue">Value between 0 and 5.</param>
     /// <returns>An updated <see cref="AnimeListStatus"/>.</returns>
     Task<AnimeListStatus> UpdateMyAnimeListStatusAsync(int animeId,
-                                                       WatchingStatus? status = null,
-                                                       bool? isRewatching = null,
-                                                       int? score = null,
-                                                       int? numWatchedEpisodes = null,
-                                                       int? priority = null,
-                                                       int? numTimesRewatched = null,
-                                                       int? rewatchValue = null,
-                                                       string? tags = null,
-                                                       string? comments = null,
+                                                       MyAnimeListStatusBuilder fields,
                                                        CancellationToken token = default);
 
     /// <summary>
@@ -161,20 +150,9 @@ public interface IMALClient
     /// If specified manga already exists, update its status.
     /// This endpoint updates only values specified by the parameter.
     /// </summary>
-    /// <param name="score">Value between 0 and 10.</param>
-    /// <param name="priority">Value between 0 and 2.</param>
-    /// <param name="rereadValue">Value between 0 and 5.</param>
+    /// <returns>An updated <see cref="MangaListStatus"/>.</returns>
     Task<MangaListStatus> UpdateMyMangaListAsync(int mangaId,
-                                                 ReadingStatus? status = null,
-                                                 bool? isReading = null,
-                                                 int? score = null,
-                                                 int? numVolumesRead = null,
-                                                 int? numChaptersRead = null,
-                                                 int? priority = null,
-                                                 int? numTimesReread = null,
-                                                 int? rereadValue = null,
-                                                 string? tags = null,
-                                                 string? comments = null,
+                                                 MyMangaListStatusBuilder fields,
                                                  CancellationToken token = default);
 
     /// <summary>

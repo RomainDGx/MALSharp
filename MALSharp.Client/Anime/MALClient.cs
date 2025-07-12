@@ -162,15 +162,7 @@ public partial class MALClient
     }
 
     public Task<AnimeListStatus> UpdateMyAnimeListStatusAsync(int animeId,
-                                                              WatchingStatus? status = null,
-                                                              bool? isRewatching = null,
-                                                              int? score = null,
-                                                              int? numWatchedEpisodes = null,
-                                                              int? priority = null,
-                                                              int? numTimesRewatched = null,
-                                                              int? rewatchValue = null,
-                                                              string? tags = null,
-                                                              string? comments = null,
+                                                              MyAnimeListStatusBuilder fields,
                                                               CancellationToken token = default)
     {
         throw new NotImplementedException();

@@ -82,16 +82,7 @@ public partial class MALClient
     }
 
     public Task<MangaListStatus> UpdateMyMangaListAsync(int mangaId,
-                                                        ReadingStatus? status = null,
-                                                        bool? isReading = null,
-                                                        int? score = null,
-                                                        int? numVolumesRead = null,
-                                                        int? numChaptersRead = null,
-                                                        int? priority = null,
-                                                        int? numTimesReread = null,
-                                                        int? rereadValue = null,
-                                                        string? tags = null,
-                                                        string? comments = null,
+                                                        MyMangaListStatusBuilder fields,
                                                         CancellationToken token = default)
     {
         throw new NotImplementedException();
