@@ -1,5 +1,6 @@
 ﻿using MALSharp.Client.Forum;
 using MALSharp.Models.Forum;
+using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
@@ -22,6 +23,9 @@ public partial class MALClient
                                                              int offset = 0,
                                                              CancellationToken token = default)
     {
+        _logger?.LogInformation("Start GetForumTopicDetailAsync: TopicId={TopicId}, Limit={Limit}, Offset={Offset}",
+                                topicId, limit, offset);
+
         var builder = new MALUriBuilder($"forum/topic/{CheckPositive(topicId, nameof(topicId))}")
             .AddLimit(limit, 100)
             .SetOffset(offset);
@@ -34,6 +38,9 @@ public partial class MALClient
             {
                 var content = await ExecuteRequestAsync<TopicDetailPayload>(HttpMethod.Get, builder.Build(), token).ConfigureAwait(false);
 
+                _logger?.LogDebug("Fetched page: PostsCount={PostsCount}, Next={Next}",
+                                  content.Topic.Posts.Count, string.IsNullOrEmpty(content.Paging.Next) ? "None" : content.Paging.Next);
+
                 if (topic is null)
                 {
                     topic = content.Topic;
@@ -42,6 +49,7 @@ public partial class MALClient
 
                     if (limit <= 0)
                     {
+                        _logger?.LogDebug("Pagination limit reached, stopping iteration");
                         break;
                     }
                 }
@@ -53,6 +61,7 @@ public partial class MALClient
 
                         if (--limit <= 0)
                         {
+                            _logger?.LogDebug("Pagination limit reached, stopping iteration");
                             return topic;
                         }
                         offset++;
@@ -60,6 +69,7 @@ public partial class MALClient
                 }
                 if (string.IsNullOrEmpty(content.Paging.Next))
                 {
+                    _logger?.LogDebug("No more pages to fetch, stopping iteration");
                     break;
                 }
                 builder.SetLimit(limit)
@@ -70,6 +80,7 @@ public partial class MALClient
         }
         catch (MALClientException e) when (e.StatusCode is HttpStatusCode.NotFound)
         {
+            _logger?.LogWarning("Topic not found: TopicId={TopicId}", topicId);
             return null;
         }
         catch
@@ -126,6 +137,9 @@ public partial class MALClient
                                                 int offset,
                                                 CancellationToken token = default)
     {
+        _logger?.LogInformation("Start GetForumTopicsAsync: {Key}={Value}, Limit={Limit}, Offset={Offset}",
+                                key, value, limit, offset);
+
         var builder = new MALUriBuilder("forum/topics")
             .Add("sort", "recent")
             .Add(key, value)
