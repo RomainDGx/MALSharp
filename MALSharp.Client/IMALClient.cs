@@ -34,7 +34,7 @@ public interface IMALClient
 
     IAsyncEnumerable<Models.Anime.Anime> GetSeasonalAnimeAsync(int year,
                                                                Season season,
-                                                               SeasonalAnimeSort sort,
+                                                               SeasonalAnimeSort? sort = null,
                                                                int limit = 100,
                                                                int offset = 0,
                                                                bool nsfw = false,

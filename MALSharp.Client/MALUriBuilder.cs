@@ -1,4 +1,5 @@
-﻿using MALSharp.Models.Anime;
+﻿using MALSharp.Client.Anime;
+using MALSharp.Models.Anime;
 using MALSharp.Models.Manga;
 using System;
 using System.Collections.Generic;
@@ -82,6 +83,20 @@ internal class MALUriBuilder
             throw new ArgumentException("String query value cannot be empty.");
         }
         _parameters.Add(key, value);
+        return this;
+    }
+
+    internal MALUriBuilder AddSeasonalAnimeSort(SeasonalAnimeSort? sort)
+    {
+        if (sort.HasValue)
+        {
+            Add("sort", sort switch
+            {
+                SeasonalAnimeSort.AnimeScore => "anime_score",
+                SeasonalAnimeSort.AnimeNumListUsers => "anime_num_list_users",
+                _ => throw new InvalidEnumArgumentException(nameof(SeasonalAnimeSort), (int)sort, typeof(SeasonalAnimeSort))
+            });
+        }
         return this;
     }
 

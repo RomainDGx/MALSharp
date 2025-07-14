@@ -84,7 +84,7 @@ public partial class MALClient
 
     public async IAsyncEnumerable<Models.Anime.Anime> GetSeasonalAnimeAsync(int year,
                                                                             Season season,
-                                                                            SeasonalAnimeSort sort,
+                                                                            SeasonalAnimeSort? sort = null,
                                                                             int limit = 100,
                                                                             int offset = 0,
                                                                             bool nsfw = false,
@@ -92,12 +92,7 @@ public partial class MALClient
                                                                             [EnumeratorCancellation] CancellationToken token = default)
     {
         var uri = new MALUriBuilder($"anime/season/{CheckPositive(year, nameof(year))}/{new SeasonConverter().EnumToString(season)}")
-            .Add("sort", sort switch
-            {
-                SeasonalAnimeSort.AnimeScore => "anime_score",
-                SeasonalAnimeSort.AnimeNumListUsers => "anime_num_list_users",
-                _ => throw new InvalidEnumArgumentException(nameof(SeasonalAnimeSort), (int)sort, typeof(SeasonalAnimeSort))
-            })
+            .AddSeasonalAnimeSort(sort)
             .AddLimit(limit, 500)
             .AddNsfw(nsfw)
             .AddFields(fields, _options.ExplicitFields);
