@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MALSharp.Models.Tests", "MA
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MALSharp.Client", "MALSharp.Client\MALSharp.Client.csproj", "{288158A4-933F-46A2-BD31-2C096558CAA7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MALSharp.Client.Tests", "MALSharp.Client.Tests\MALSharp.Client.Tests.csproj", "{D406740D-2BE5-48BC-8DF7-9BA339ED9169}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,6 +37,10 @@ Global
 		{288158A4-933F-46A2-BD31-2C096558CAA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{288158A4-933F-46A2-BD31-2C096558CAA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{288158A4-933F-46A2-BD31-2C096558CAA7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D406740D-2BE5-48BC-8DF7-9BA339ED9169}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D406740D-2BE5-48BC-8DF7-9BA339ED9169}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D406740D-2BE5-48BC-8DF7-9BA339ED9169}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D406740D-2BE5-48BC-8DF7-9BA339ED9169}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
