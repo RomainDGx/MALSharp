@@ -1,6 +1,5 @@
 ﻿using MALSharp.Client.Manga;
 using MALSharp.Models.Manga;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Net.Http;
@@ -85,13 +84,16 @@ public partial class MALClient
                                                         MyMangaListStatusBuilder fields,
                                                         CancellationToken token = default)
     {
-        throw new NotImplementedException();
+        return ExecuteRequestAsync<MangaListStatus>(HttpMethod.Patch,
+                                                    $"manga/{CheckPositive(mangaId, nameof(mangaId))}/my_list_status",
+                                                    token,
+                                                    new FormUrlEncodedContent(fields.Fields));
     }
 
     public Task DeleteMyMangaListItemAsync(int mangaId,
                                            CancellationToken token = default)
     {
-        throw new NotImplementedException();
+        return ExecuteRequestAsync(HttpMethod.Delete, $"manga/{CheckPositive(mangaId, nameof(mangaId))}/my_list_status", token);
     }
 
     public async IAsyncEnumerable<UserMangaListItem> GetUserMangaListAsync(string userName = "@me",

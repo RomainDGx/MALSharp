@@ -20,6 +20,7 @@ public sealed partial class MALClient : IMALClient, IDisposable
     readonly IAccessTokenProvider? _accessTokenProvider;
     readonly ILogger<MALClient>? _logger;
 
+    #region Constructors
     public MALClient(MALClientOptions options) : this(options, (IAccessTokenProvider?)null, null, null) { }
 
     public MALClient(MALClientOptions options, ILogger<MALClient> logger) : this(options, (IAccessTokenProvider?)null, null, logger) { }
@@ -64,6 +65,7 @@ public sealed partial class MALClient : IMALClient, IDisposable
 
         _logger?.LogInformation("MALClient initialized with BaseUrl: {BaseUrl}", _http.BaseAddress);
     }
+    #endregion
 
     async IAsyncEnumerable<T> ExecuteListRequestAsync<T>(MALUriBuilder builder, int limit, int offset, [EnumeratorCancellation] CancellationToken token)
     {
@@ -102,9 +104,9 @@ public sealed partial class MALClient : IMALClient, IDisposable
         }
     }
 
-    async Task<T> ExecuteRequestAsync<T>(HttpMethod method, string uri, CancellationToken token)
+    async Task<T> ExecuteRequestAsync<T>(HttpMethod method, string uri, CancellationToken token, HttpContent? content = null)
     {
-        using var request = await BuildRequestAsync(method, uri, token).ConfigureAwait(false);
+        using var request = await BuildRequestAsync(method, uri, token, content).ConfigureAwait(false);
 
         _logger?.LogDebug("Sending HTTP request: {Method} {Uri}", method, uri);
 
@@ -124,9 +126,25 @@ public sealed partial class MALClient : IMALClient, IDisposable
         return result;
     }
 
-    async Task<HttpRequestMessage> BuildRequestAsync(HttpMethod method, string uri, CancellationToken token)
+    async Task ExecuteRequestAsync(HttpMethod method, string uri, CancellationToken token)
     {
-        var request = new HttpRequestMessage(method, uri);
+        using var request = await BuildRequestAsync(method, uri, token).ConfigureAwait(false);
+
+        _logger?.LogDebug("Sending HTTP request: {Method} {Uri}", method, uri);
+
+        using var response = await _http.SendAsync(request, token).ConfigureAwait(false);
+
+        _logger?.LogDebug("Received HTTP response: {StatusCode} {Uri}", response.StatusCode, uri);
+
+        await EnsureSuccessResponseAsync(response, token).ConfigureAwait(false);
+    }
+
+    async Task<HttpRequestMessage> BuildRequestAsync(HttpMethod method, string uri, CancellationToken token, HttpContent? content = null)
+    {
+        var request = new HttpRequestMessage(method, uri)
+        {
+            Content = content
+        };
 
         if (_accessTokenProvider is not null)
         {

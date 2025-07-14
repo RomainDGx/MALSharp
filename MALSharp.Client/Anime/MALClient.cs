@@ -1,7 +1,6 @@
 ﻿using MALSharp.Client.Anime;
 using MALSharp.Models.Anime;
 using MALSharp.Models.Converters;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Net;
@@ -165,13 +164,16 @@ public partial class MALClient
                                                               MyAnimeListStatusBuilder fields,
                                                               CancellationToken token = default)
     {
-        throw new NotImplementedException();
+        return ExecuteRequestAsync<AnimeListStatus>(HttpMethod.Patch,
+                                                    $"anime/{CheckPositive(animeId, nameof(animeId))}/my_list_status",
+                                                    token,
+                                                    new FormUrlEncodedContent(fields.Fields));
     }
 
     public Task DeleteMyAnimeListItemAsync(int animeId,
                                            CancellationToken token = default)
     {
-        throw new NotImplementedException();
+        return ExecuteRequestAsync(HttpMethod.Delete, $"anime/{CheckPositive(animeId, nameof(animeId))}/my_list_status", token);
     }
 
     public async IAsyncEnumerable<UserAnimeListItem> GetUserAnimeListAsync(string userName = "@me",
