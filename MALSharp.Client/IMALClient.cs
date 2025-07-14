@@ -69,9 +69,9 @@ public interface IMALClient
     /// This endpoint updates only values specified by the parameter.
     /// </summary>
     /// <returns>An updated <see cref="AnimeListStatus"/>.</returns>
-    Task<AnimeListStatus> UpdateMyAnimeListStatusAsync(int animeId,
-                                                       MyAnimeListStatusBuilder fields,
-                                                       CancellationToken token = default);
+    Task<AnimeListStatus> UpdateMyAnimeStatusAsync(int animeId,
+                                                   MyAnimeListStatusBuilder fields,
+                                                   CancellationToken token = default);
 
     /// <summary>
     /// If the specified anime does not exist in user's anime list, throw an error.
@@ -108,10 +108,10 @@ public interface IMALClient
                                                           int offset = 0,
                                                           CancellationToken token = default);
 
-    IAsyncEnumerable<Topic> GetForumTopicsByQuerysync(string query,
-                                                      int limit = 100,
-                                                      int offset = 0,
-                                                      CancellationToken token = default);
+    IAsyncEnumerable<Topic> GetForumTopicsByQueryAsync(string query,
+                                                       int limit = 100,
+                                                       int offset = 0,
+                                                       CancellationToken token = default);
 
     IAsyncEnumerable<Topic> GetForumTopicsByTopicUserNameAsync(string topicUserName,
                                                                int limit = 100,
@@ -136,12 +136,12 @@ public interface IMALClient
                                             MangaFieldsBuilder? fields = null,
                                             CancellationToken token = default);
 
-    IAsyncEnumerable<Ranked<Models.Manga.Manga>> GetMangaRanking(MangaRankingType rankingType,
-                                                                 int limit = 100,
-                                                                 int offset = 0,
-                                                                 bool nsfw = false,
-                                                                 MangaListFieldsBuilder? fields = null,
-                                                                 CancellationToken token = default);
+    IAsyncEnumerable<Ranked<Models.Manga.Manga>> GetMangaRankingAsync(MangaRankingType rankingType,
+                                                                      int limit = 100,
+                                                                      int offset = 0,
+                                                                      bool nsfw = false,
+                                                                      MangaListFieldsBuilder? fields = null,
+                                                                      CancellationToken token = default);
     #endregion
 
     #region Manga list
@@ -151,9 +151,9 @@ public interface IMALClient
     /// This endpoint updates only values specified by the parameter.
     /// </summary>
     /// <returns>An updated <see cref="MangaListStatus"/>.</returns>
-    Task<MangaListStatus> UpdateMyMangaListAsync(int mangaId,
-                                                 MyMangaListStatusBuilder fields,
-                                                 CancellationToken token = default);
+    Task<MangaListStatus> UpdateMyMangaStatusAsync(int mangaId,
+                                                   MyMangaListStatusBuilder fields,
+                                                   CancellationToken token = default);
 
     /// <summary>
     /// If the specified manga does not exist in user's manga list, throw an error.

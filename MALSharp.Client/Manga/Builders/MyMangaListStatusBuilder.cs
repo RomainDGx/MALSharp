@@ -19,7 +19,7 @@ public class MyMangaListStatusBuilder
     /// <summary>
     /// Set <see cref="MangaListStatus.Status"/> field.
     /// </summary>
-    public MyMangaListStatusBuilder Set(ReadingStatus status)
+    public MyMangaListStatusBuilder SetStatus(ReadingStatus status)
     {
         _fields["status"] = new ReadingStatusConverter().EnumToString(status);
         return this;

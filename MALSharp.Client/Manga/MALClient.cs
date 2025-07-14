@@ -53,12 +53,12 @@ public partial class MALClient
         }
     }
 
-    public IAsyncEnumerable<Ranked<Models.Manga.Manga>> GetMangaRanking(MangaRankingType rankingType,
-                                                                        int limit = 100,
-                                                                        int offset = 0,
-                                                                        bool nsfw = false,
-                                                                        MangaListFieldsBuilder? fields = null,
-                                                                        CancellationToken token = default)
+    public IAsyncEnumerable<Ranked<Models.Manga.Manga>> GetMangaRankingAsync(MangaRankingType rankingType,
+                                                                             int limit = 100,
+                                                                             int offset = 0,
+                                                                             bool nsfw = false,
+                                                                             MangaListFieldsBuilder? fields = null,
+                                                                             CancellationToken token = default)
     {
         var uri = new MALUriBuilder("manga/ranking")
             .Add("ranking_type", rankingType switch
@@ -81,7 +81,7 @@ public partial class MALClient
         return ExecuteListRequestAsync<Ranked<Models.Manga.Manga>>(uri, limit, offset, token);
     }
 
-    public Task<MangaListStatus> UpdateMyMangaListAsync(int mangaId,
+    public Task<MangaListStatus> UpdateMyMangaStatusAsync(int mangaId,
                                                         MyMangaListStatusBuilder fields,
                                                         CancellationToken token = default)
     {

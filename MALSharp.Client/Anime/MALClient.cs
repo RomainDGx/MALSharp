@@ -161,7 +161,7 @@ public partial class MALClient
         }
     }
 
-    public Task<AnimeListStatus> UpdateMyAnimeListStatusAsync(int animeId,
+    public Task<AnimeListStatus> UpdateMyAnimeStatusAsync(int animeId,
                                                               MyAnimeListStatusBuilder fields,
                                                               CancellationToken token = default)
     {

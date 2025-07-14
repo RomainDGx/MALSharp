@@ -107,10 +107,10 @@ public partial class MALClient
         return GetForumTopicsAsync("subboard_id", CheckPositive(subboardId, nameof(subboardId)), limit, offset, token);
     }
 
-    public IAsyncEnumerable<Topic> GetForumTopicsByQuerysync(string query,
-                                                             int limit = 100,
-                                                             int offset = 0,
-                                                             CancellationToken token = default)
+    public IAsyncEnumerable<Topic> GetForumTopicsByQueryAsync(string query,
+                                                              int limit = 100,
+                                                              int offset = 0,
+                                                              CancellationToken token = default)
     {
         return GetForumTopicsAsync("q", CheckStringParameter(query, nameof(query)), limit, offset, token);
     }
