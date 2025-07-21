@@ -184,7 +184,7 @@ public sealed partial class MALClient : IMALClient, IDisposable
     {
         if (value < 0)
         {
-            throw new ArgumentException("Parameter cannot be negative or zero.", paramName);
+            throw new ArgumentOutOfRangeException(paramName, "Parameter cannot be negative or zero.");
         }
         return value.ToString();
     }
