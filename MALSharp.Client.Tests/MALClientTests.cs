@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using MALSharp.Client.TestUtils;
+using NUnit.Framework;
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;

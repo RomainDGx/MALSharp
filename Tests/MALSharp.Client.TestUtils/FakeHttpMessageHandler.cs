@@ -3,7 +3,9 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
-class FakeHttpMessageHandler : HttpMessageHandler
+namespace MALSharp.Client.TestUtils;
+
+public class FakeHttpMessageHandler : HttpMessageHandler
 {
     public Action<HttpRequestMessage>? HandleRequest { get; set; }
 

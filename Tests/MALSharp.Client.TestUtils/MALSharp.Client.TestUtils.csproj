@@ -12,7 +12,7 @@
 	</ItemGroup>
 
   <ItemGroup>
-  	 <ProjectReference Include="..\Tests\MALSharp.Client.TestUtils\MALSharp.Client.TestUtils.csproj" />
+    <ProjectReference Include="..\..\MALSharp.Client\MALSharp.Client.csproj" />
   </ItemGroup>
 
 </Project>

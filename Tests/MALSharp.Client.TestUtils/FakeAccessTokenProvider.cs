@@ -1,9 +1,9 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 
-namespace MALSharp.Client.Tests;
+namespace MALSharp.Client.TestUtils;
 
-internal class FakeAccessTokenProvider : IAccessTokenProvider
+public class FakeAccessTokenProvider : IAccessTokenProvider
 {
     readonly string _accessToken;
 
