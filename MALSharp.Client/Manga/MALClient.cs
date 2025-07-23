@@ -30,9 +30,9 @@ public partial class MALClient
         }
     }
 
-    public Task<Models.Manga.Manga?> GetMangaAsync(int mangaId,
-                                                   MangaFieldsBuilder? fields = null,
-                                                   CancellationToken token = default)
+    public async Task<Models.Manga.Manga?> GetMangaAsync(int mangaId,
+                                                         MangaFieldsBuilder? fields = null,
+                                                         CancellationToken token = default)
     {
         try
         {
@@ -40,11 +40,11 @@ public partial class MALClient
                 .AddFields(fields, _options.ExplicitFields)
                 .Build();
 
-            return ExecuteRequestAsync<Models.Manga.Manga?>(HttpMethod.Get, uri, token);
+            return await ExecuteRequestAsync<Models.Manga.Manga?>(HttpMethod.Get, uri, token).ConfigureAwait(false);
         }
         catch (MALClientException e) when (e.StatusCode is System.Net.HttpStatusCode.NotFound)
         {
-            return Task.FromResult<Models.Manga.Manga?>(null);
+            return null;
         }
         catch
         {

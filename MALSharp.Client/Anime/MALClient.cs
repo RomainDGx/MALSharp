@@ -32,9 +32,9 @@ public partial class MALClient
         }
     }
 
-    public Task<Models.Anime.Anime?> GetAnimeAsync(int animeId,
-                                                   AnimeFieldsBuilder? fields = null,
-                                                   CancellationToken token = default)
+    public async Task<Models.Anime.Anime?> GetAnimeAsync(int animeId,
+                                                         AnimeFieldsBuilder? fields = null,
+                                                         CancellationToken token = default)
     {
         try
         {
@@ -42,11 +42,11 @@ public partial class MALClient
                 .AddFields(fields, _options.ExplicitFields)
                 .Build();
 
-            return ExecuteRequestAsync<Models.Anime.Anime?>(HttpMethod.Get, uri, token);
+            return await ExecuteRequestAsync<Models.Anime.Anime?>(HttpMethod.Get, uri, token).ConfigureAwait(false);
         }
         catch (MALClientException e) when (e.StatusCode is HttpStatusCode.NotFound)
         {
-            return Task.FromResult<Models.Anime.Anime?>(null);
+            return null;
         }
         catch
         {
