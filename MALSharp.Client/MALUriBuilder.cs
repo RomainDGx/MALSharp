@@ -58,7 +58,7 @@ internal class MALUriBuilder
 
     internal MALUriBuilder AddNsfw(bool nsfw)
     {
-        _parameters.Add("nsfw", nsfw.ToString().ToLower());
+        _parameters.Add("nsfw", nsfw ? "true" : "false");
         return this;
     }
 
