@@ -25,6 +25,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MALSharp.Client.TestUtils",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MALSharp.Client.Hosting", "MALSharp.Client.Hosting\MALSharp.Client.Hosting.csproj", "{47CBE04B-83B3-45B3-ACEA-38060624F7FE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MALSharp.Client.AspNetCore.Auth", "MALSharp.Client.AspNetCore.Auth\MALSharp.Client.AspNetCore.Auth.csproj", "{2D61F624-8D97-4074-9B1D-049D38464D19}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +57,10 @@ Global
 		{47CBE04B-83B3-45B3-ACEA-38060624F7FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{47CBE04B-83B3-45B3-ACEA-38060624F7FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{47CBE04B-83B3-45B3-ACEA-38060624F7FE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2D61F624-8D97-4074-9B1D-049D38464D19}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D61F624-8D97-4074-9B1D-049D38464D19}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D61F624-8D97-4074-9B1D-049D38464D19}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D61F624-8D97-4074-9B1D-049D38464D19}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
