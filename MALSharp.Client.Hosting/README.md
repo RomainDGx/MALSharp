@@ -7,16 +7,16 @@ It enables you to register and configure the MyAnimeList client for both public 
 
 - Register `IMALClient` via `IServiceCollection`.
 - Supports both unauthenticated and authenticated MyAnimeList API calls via `IAccessTokenProvider`.
-- Preconfigured named `HttpClient` with `ClientId`, base address, and timeout.
 - Integration with `IHostBuilder` and `IHostApplicationBuilder`.
 - Configuration-driven setup through `IConfiguration`.
 
 ## Using `AddMALClient`
 
-You can register the `IMALClient` into the DI via `IServiceCollection` extensions methods and edit `MALClientOptions`:
+You can register the `IMALClient` into the DI via `IServiceCollection` extensions methods and configure `MALClientOptions`:
 
 ### Unauthenticated Usage
 
+For authenticated calls, you provide your own `IAccessTokenProvider` implementation:
 ```cs
 builder.Services.AddMALClient(options =>
 {
@@ -32,18 +32,19 @@ _Note:_ You can view the default configuration of [MALClientOptions](../MALSharp
 builder.Services.AddMALClient(options =>
 {
     options.ClientId = "your-mal-client-id";
-},
-provider => new MyAccessTokenProvider(provider));
+});
+
+builder.Services.AddScoped<IAccessTokenProvider, MyAccessTokenProvider>();
 ```
-This approach is ideal when you want to programmatically define options and/or resolve your own `IAccessTokenProvider`.
+This approach allows you to plug in any token resolution logic (e.g. from ASP.NET Core `HttpContext`, a database, or a cache).
 
 ## Using Host Builders
 
-`MALSharp.Client.Hosting` provides integration methods for both `IHostBuilder` and `IHostApplicationBuilder`:
+`MALSharp.Client.Hosting` provides integration methods for both `IHostBuilder` and `IHostApplicationBuilder`.
 
-With this approach you can configure your client with `Configuration`.
+With this approach, you can configure the client via configuration files.
 
-You can configure the client through `appsettings.json` using the `MALClient` section:
+### Example: appsettings.json
 ```json
 {
   "MALClient": {
@@ -56,29 +57,38 @@ You can configure the client through `appsettings.json` using the `MALClient` se
 }
 ```
 
-Then register with:
+### Registering with `IHostBuilder`
 ```cs
 hostBuilder.UseMALClient();
 ```
 
-Or with Access Token Provider:
+### With Additional Code-Based Configuration
 ```cs
-hostBuilder.UseMALClient(provider => new MyAccessTokenProvider(provider));
+hostBuilder.UseMALClient(options =>
+{
+    options.JavaScriptEncoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping;
+});
 ```
+**Note:** When using the `UseMALClient(Action<MALClientOptions>)` overload, the options provided in `appsettings.json` are applied first.  
+The `configureOptions` delegate is then applied on top, allowing you to override or extend the configuration values.
 
 ### JavaScriptEncoder Limitation
 
 Due to the limitations of configuration binding, `JavaScriptEncoder` cannot be configured via `IConfiguration`.
-You must set it manually using the delegate overload of `AddMALClient`.
+You must set it manually using the delegate overload of `AddMALClient` or `UseMALClient`.
 ```cs
 services.AddMALClient(options =>
 {
     options.ClientId = "<your-client-id>";
     options.JavaScriptEncoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping;
 });
+
+hostBuilder.UseMALClient(options =>
+{
+    options.JavaScriptEncoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping;
+});
 ```
 
 ## Registered Services
 - `IMALClient` as scoped.
-- `HttpClient` named `"MALSharp"` with preconfigured headers and timeout.
-- Optional: custom `IAccessTokenProvider` for authenticated access.
+- Optional: user-provided `IAccessTokenProvider` for authenticated access.
