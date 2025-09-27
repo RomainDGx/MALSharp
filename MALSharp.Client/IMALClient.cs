@@ -14,6 +14,7 @@ namespace MALSharp.Client;
 public interface IMALClient
 {
     #region Anime
+    /// <param name="search">Anime name. Cannot be longer than 64 characters.</param>
     IAsyncEnumerable<Models.Anime.Anime> SearchAnimeAsync(string search,
                                                           int limit = 100,
                                                           int offset = 0,
@@ -125,6 +126,7 @@ public interface IMALClient
     #endregion
 
     #region Manga
+    /// <param name="search">Manga name. Cannot be longer than 64 characters.</param>
     IAsyncEnumerable<Models.Manga.Manga> SearchMangaAsync(string search,
                                                           int limit = 100,
                                                           int offset = 0,

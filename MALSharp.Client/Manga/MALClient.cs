@@ -1,5 +1,6 @@
 ﻿using MALSharp.Client.Manga;
 using MALSharp.Models.Manga;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Net.Http;
@@ -18,6 +19,12 @@ public partial class MALClient
                                                                        MangaListFieldsBuilder? fields = null,
                                                                        [EnumeratorCancellation] CancellationToken token = default)
     {
+        ArgumentNullException.ThrowIfNull(search);
+        if (search.Length > 64)
+        {
+            throw new ArgumentOutOfRangeException(nameof(search), "Search cannot be longer that 64 characters.");
+        }
+
         var uri = new MALUriBuilder("manga")
             .Add("q", search)
             .AddLimit(limit, 100)
