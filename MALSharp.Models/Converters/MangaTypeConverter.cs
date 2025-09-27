@@ -5,7 +5,7 @@ namespace MALSharp.Models.Converters;
 
 public class MangaTypeConverter : BaseEnumConverter<MangaType>
 {
-    public override MangaType StringToEnum(string? value) => value switch
+    public static MangaType Parse(string? value) => value switch
     {
         "unknown" => MangaType.Unknown,
         "manga" => MangaType.Manga,
@@ -19,7 +19,7 @@ public class MangaTypeConverter : BaseEnumConverter<MangaType>
         _ => throw new JsonException($"Invalid value '{value ?? "null"}' for enum {typeof(MangaType).Name}.")
     };
 
-    public override string EnumToString(MangaType value) => value switch
+    public static string Format(MangaType value) => value switch
     {
         MangaType.Unknown => "unknown",
         MangaType.Manga => "manga",
@@ -32,4 +32,8 @@ public class MangaTypeConverter : BaseEnumConverter<MangaType>
         MangaType.LightNovel => "light_novel",
         _ => throw new JsonException($"Invalid value '{value}' for enum {typeof(MangaType).Name}.")
     };
+
+    protected override MangaType ParseCore(string? value) => Parse(value);
+
+    protected override string FormatCore(MangaType value) => Format(value);
 }

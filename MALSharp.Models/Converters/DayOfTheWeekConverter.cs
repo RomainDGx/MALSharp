@@ -5,7 +5,7 @@ namespace MALSharp.Models.Converters;
 
 public class DayOfTheWeekConverter : BaseEnumConverter<DayOfTheWeek>
 {
-    public override DayOfTheWeek StringToEnum(string? value) => value switch
+    public static DayOfTheWeek Parse(string? value) => value switch
     {
         "monday" => DayOfTheWeek.Monday,
         "tuesday" => DayOfTheWeek.Tuesday,
@@ -18,7 +18,7 @@ public class DayOfTheWeekConverter : BaseEnumConverter<DayOfTheWeek>
         _ => throw new JsonException($"Invalid value '{value ?? "null"}' for enum {typeof(DayOfTheWeek).Name}.")
     };
 
-    public override string EnumToString(DayOfTheWeek value) => value switch
+    public static string Format(DayOfTheWeek value) => value switch
     {
         DayOfTheWeek.Monday => "monday",
         DayOfTheWeek.Tuesday => "tuesday",
@@ -30,4 +30,8 @@ public class DayOfTheWeekConverter : BaseEnumConverter<DayOfTheWeek>
         DayOfTheWeek.Other => "other",
         _ => throw new JsonException($"Invalid value '{value}' for enum {typeof(DayOfTheWeek).Name}.")
     };
+
+    protected override DayOfTheWeek ParseCore(string? value) => Parse(value);
+
+    protected override string FormatCore(DayOfTheWeek value) => Format(value);
 }

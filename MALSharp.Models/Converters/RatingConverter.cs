@@ -5,7 +5,7 @@ namespace MALSharp.Models.Converters;
 
 public class RatingConverter : BaseEnumConverter<Rating>
 {
-    public override Rating StringToEnum(string? value) => value switch
+    public static Rating Parse(string? value) => value switch
     {
         "g" => Rating.G,
         "pg" => Rating.Pg,
@@ -16,7 +16,7 @@ public class RatingConverter : BaseEnumConverter<Rating>
         _ => throw new JsonException($"Invalid value '{value ?? "null"}' for enum {typeof(Rating).Name}.")
     };
 
-    public override string EnumToString(Rating value) => value switch
+    public static string Format(Rating value) => value switch
     {
         Rating.G => "g",
         Rating.Pg => "pg",
@@ -26,4 +26,8 @@ public class RatingConverter : BaseEnumConverter<Rating>
         Rating.Rx => "rx",
         _ => throw new JsonException($"Invalid value '{value}' for enum {typeof(Rating).Name}.")
     };
+
+    protected override Rating ParseCore(string? value) => Parse(value);
+
+    protected override string FormatCore(Rating value) => Format(value);
 }

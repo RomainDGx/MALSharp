@@ -21,7 +21,7 @@ public class MyAnimeListStatusBuilder
     /// </summary>
     public MyAnimeListStatusBuilder SetWatchingStatus(WatchingStatus status)
     {
-        _fields["status"] = new WatchingStatusConverter().EnumToString(status);
+        _fields["status"] = WatchingStatusConverter.Format(status);
         return this;
     }
 

@@ -6,18 +6,18 @@ namespace MALSharp.Models.Converters;
 
 public abstract class BaseEnumConverter<T> : JsonConverter<T> where T : struct, Enum
 {
-    public abstract string EnumToString(T value);
+    protected abstract T ParseCore(string? value);
 
-    public abstract T StringToEnum(string? value);
+    protected abstract string FormatCore(T value);
 
     public override T Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         ConvertHelper.CheckString(reader);
-        return StringToEnum(reader.GetString());
+        return ParseCore(reader.GetString());
     }
 
     public override void Write(Utf8JsonWriter writer, T value, JsonSerializerOptions options)
     {
-        writer.WriteStringValue(EnumToString(value));
+        writer.WriteStringValue(FormatCore(value));
     }
 }

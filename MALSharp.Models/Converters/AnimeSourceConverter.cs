@@ -5,7 +5,7 @@ namespace MALSharp.Models.Converters;
 
 public class AnimeSourceConverter : BaseEnumConverter<AnimeSource>
 {
-    public override AnimeSource StringToEnum(string? value) => value switch
+    public static AnimeSource Parse(string? value) => value switch
     {
         "other" => AnimeSource.Other,
         "original" => AnimeSource.Original,
@@ -26,7 +26,7 @@ public class AnimeSourceConverter : BaseEnumConverter<AnimeSource>
         _ => throw new JsonException($"Invalid value '{value ?? "null"}' for enum {typeof(AnimeSource).Name}.")
     };
 
-    public override string EnumToString(AnimeSource value) => value switch
+    public static string Format(AnimeSource value) => value switch
     {
         AnimeSource.Other => "other",
         AnimeSource.Original => "original",
@@ -46,4 +46,8 @@ public class AnimeSourceConverter : BaseEnumConverter<AnimeSource>
         AnimeSource.MixedMedia => "mixed_media",
         _ => throw new JsonException($"Invalid value '{value}' for enum {typeof(AnimeSource).Name}.")
     };
+
+    protected override AnimeSource ParseCore(string? value) => Parse(value);
+
+    protected override string FormatCore(AnimeSource value) => Format(value);
 }

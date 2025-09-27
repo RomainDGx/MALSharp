@@ -5,7 +5,7 @@ namespace MALSharp.Models.Converters;
 
 public class RelationTypeConverter : BaseEnumConverter<RelationType>
 {
-    public override RelationType StringToEnum(string? value) => value switch
+    public static RelationType Parse(string? value) => value switch
     {
         "sequel" => RelationType.Sequel,
         "prequel" => RelationType.Prequel,
@@ -21,7 +21,7 @@ public class RelationTypeConverter : BaseEnumConverter<RelationType>
         _ => throw new JsonException($"Invalid value '{value ?? "null"}' for enum {typeof(RelationType).Name}.")
     };
 
-    public override string EnumToString(RelationType value) => value switch
+    public static string Format(RelationType value) => value switch
     {
         RelationType.Sequel => "sequel",
         RelationType.Prequel => "prequel",
@@ -36,4 +36,8 @@ public class RelationTypeConverter : BaseEnumConverter<RelationType>
         RelationType.Other => "other",
         _ => throw new JsonException($"Invalid value '{value}' for enum {typeof(RelationType).Name}.")
     };
+
+    protected override RelationType ParseCore(string? value) => Parse(value);
+
+    protected override string FormatCore(RelationType value) => Format(value);
 }

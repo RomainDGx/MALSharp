@@ -5,7 +5,7 @@ namespace MALSharp.Models.Converters;
 
 public class WatchingStatusConverter : BaseEnumConverter<WatchingStatus>
 {
-    public override WatchingStatus StringToEnum(string? value) => value switch
+    public static WatchingStatus Parse(string? value) => value switch
     {
         "watching" => WatchingStatus.Watching,
         "completed" => WatchingStatus.Completed,
@@ -15,7 +15,7 @@ public class WatchingStatusConverter : BaseEnumConverter<WatchingStatus>
         _ => throw new JsonException($"Invalid value '{value ?? "null"}' for enum {typeof(WatchingStatus).Name}.")
     };
 
-    public override string EnumToString(WatchingStatus value) => value switch
+    public static string Format(WatchingStatus value) => value switch
     {
         WatchingStatus.Watching => "watching",
         WatchingStatus.Completed => "completed",
@@ -24,4 +24,8 @@ public class WatchingStatusConverter : BaseEnumConverter<WatchingStatus>
         WatchingStatus.PlanToWatch => "plan_to_watch",
         _ => throw new JsonException($"Invalid value '{value}' for enum {typeof(WatchingStatus).Name}.")
     };
+
+    protected override WatchingStatus ParseCore(string? value) => Parse(value);
+
+    protected override string FormatCore(WatchingStatus value) => Format(value);
 }

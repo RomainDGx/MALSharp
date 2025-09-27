@@ -5,7 +5,7 @@ namespace MALSharp.Models.Converters;
 
 public class SeasonConverter : BaseEnumConverter<Season>
 {
-    public override Season StringToEnum(string? value) => value switch
+    public static Season Parse(string? value) => value switch
     {
         "winter" => Season.Winter,
         "spring" => Season.Spring,
@@ -14,7 +14,7 @@ public class SeasonConverter : BaseEnumConverter<Season>
         _ => throw new JsonException($"Invalid value '{value ?? "null"}' for enum {typeof(Season).Name}.")
     };
 
-    public override string EnumToString(Season value) => value switch
+    public static string Format(Season value) => value switch
     {
         Season.Winter => "winter",
         Season.Spring => "spring",
@@ -22,4 +22,8 @@ public class SeasonConverter : BaseEnumConverter<Season>
         Season.Fall => "fall",
         _ => throw new JsonException($"Invalid value '{value}' for enum {typeof(Season).Name}.")
     };
+
+    protected override Season ParseCore(string? value) => Parse(value);
+
+    protected override string FormatCore(Season value) => Format(value);
 }

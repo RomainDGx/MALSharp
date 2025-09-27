@@ -5,7 +5,7 @@ namespace MALSharp.Models.Converters;
 
 public class AnimeTypeConverter : BaseEnumConverter<AnimeType>
 {
-    public override AnimeType StringToEnum(string? value) => value switch
+    public static AnimeType Parse(string? value) => value switch
     {
         "unknown" => AnimeType.Unknown,
         "tv" => AnimeType.Tv,
@@ -20,7 +20,7 @@ public class AnimeTypeConverter : BaseEnumConverter<AnimeType>
         _ => throw new JsonException($"Invalid value '{value ?? "null"}' for enum {typeof(AnimeType).Name}.")
     };
 
-    public override string EnumToString(AnimeType value) => value switch
+    public static string Format(AnimeType value) => value switch
     {
         AnimeType.Unknown => "unknown",
         AnimeType.Tv => "tv",
@@ -34,4 +34,8 @@ public class AnimeTypeConverter : BaseEnumConverter<AnimeType>
         AnimeType.TvSpecial => "tv_special",
         _ => throw new JsonException($"Invalid value '{value}' for enum {typeof(AnimeType).Name}.")
     };
+
+    protected override AnimeType ParseCore(string? value) => Parse(value);
+
+    protected override string FormatCore(AnimeType value) => Format(value);
 }

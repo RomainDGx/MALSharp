@@ -6,6 +6,7 @@ using NUnit.Framework;
 using System;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text.Json;
 
 namespace MALSharp.Models.Tests;
@@ -30,21 +31,21 @@ public class EnumConverterTests
     [TestCase(AnimeSource.Music, "music")]
     [TestCase(AnimeSource.MixedMedia, "mixed_media")]
     public void AnimeSourceConverter_tests(AnimeSource value, string result)
-        => InnerTest(new AnimeSourceConverter(), value, result);
+        => InnerTest<AnimeSourceConverter, AnimeSource>(value, result);
 
     [Test]
     public void AnimeSourceConverter_parsing_error_tests()
-        => ErrorInnerTests(new AnimeSourceConverter());
+        => ErrorInnerTests<AnimeSourceConverter, AnimeSource>();
 
     [TestCase(AnimeStatus.FinishedAiring, "finished_airing")]
     [TestCase(AnimeStatus.CurrentlyAiring, "currently_airing")]
     [TestCase(AnimeStatus.NotYetAired, "not_yet_aired")]
     public void AnimeStatusConverter_tests(AnimeStatus value, string strValue)
-        => InnerTest(new AnimeStatusConverter(), value, strValue);
+        => InnerTest<AnimeStatusConverter, AnimeStatus>(value, strValue);
 
     [Test]
     public void AnimeStatusConverter_parsing_error_tests()
-        => ErrorInnerTests(new AnimeStatusConverter());
+        => ErrorInnerTests<AnimeStatusConverter, AnimeStatus>();
 
     [TestCase(AnimeType.Unknown, "unknown")]
     [TestCase(AnimeType.Tv, "tv")]
@@ -57,11 +58,11 @@ public class EnumConverterTests
     [TestCase(AnimeType.Cm, "cm")]
     [TestCase(AnimeType.TvSpecial, "tv_special")]
     public void AnimeTypeConverter_tests(AnimeType value, string strValue)
-        => InnerTest(new AnimeTypeConverter(), value, strValue);
+        => InnerTest<AnimeTypeConverter, AnimeType>(value, strValue);
 
     [Test]
     public void AnimeTypeConverter_parsing_error_tests()
-        => ErrorInnerTests(new AnimeTypeConverter());
+        => ErrorInnerTests<AnimeTypeConverter, AnimeType>();
 
     [TestCase(DayOfTheWeek.Monday, "monday")]
     [TestCase(DayOfTheWeek.Tuesday, "tuesday")]
@@ -72,21 +73,21 @@ public class EnumConverterTests
     [TestCase(DayOfTheWeek.Sunday, "sunday")]
     [TestCase(DayOfTheWeek.Other, "other")]
     public void DayOfTheWeekConverter_tests(DayOfTheWeek value, string strValue)
-        => InnerTest(new DayOfTheWeekConverter(), value, strValue);
+        => InnerTest<DayOfTheWeekConverter, DayOfTheWeek>(value, strValue);
 
     [Test]
     public void DayOfTheWeekConverter_parsing_error_tests()
-        => ErrorInnerTests(new DayOfTheWeekConverter());
+        => ErrorInnerTests<DayOfTheWeekConverter, DayOfTheWeek>();
 
     [TestCase(MangaStatus.Finished, "finished")]
     [TestCase(MangaStatus.CurrentlyPublishing, "currently_publishing")]
     [TestCase(MangaStatus.NotYetPublished, "not_yet_published")]
     public void MangaStatusConverter_tests(MangaStatus value, string strValue)
-        => InnerTest(new MangaStatusConverter(), value, strValue);
+        => InnerTest<MangaStatusConverter, MangaStatus>(value, strValue);
 
     [Test]
     public void MangaStatusConverter_parsing_error_tests()
-        => ErrorInnerTests(new MangaStatusConverter());
+        => ErrorInnerTests<MangaStatusConverter, MangaStatus>();
 
     [TestCase(MangaType.Unknown, "unknown")]
     [TestCase(MangaType.Manga, "manga")]
@@ -98,21 +99,21 @@ public class EnumConverterTests
     [TestCase(MangaType.Oel, "oel")]
     [TestCase(MangaType.LightNovel, "light_novel")]
     public void MangaTypeConverter_tests(MangaType value, string strValue)
-        => InnerTest(new MangaTypeConverter(), value, strValue);
+        => InnerTest<MangaTypeConverter, MangaType>(value, strValue);
 
     [Test]
     public void MangaTypeConverter_parsing_error_tests()
-        => ErrorInnerTests(new MangaTypeConverter());
+        => ErrorInnerTests<MangaTypeConverter, MangaType>();
 
     [TestCase(Nsfw.White, "white")]
     [TestCase(Nsfw.Gray, "gray")]
     [TestCase(Nsfw.Black, "black")]
     public void NsfwConverter_tests(Nsfw value, string strValue)
-        => InnerTest(new NsfwConverter(), value, strValue);
+        => InnerTest<NsfwConverter, Nsfw>(value, strValue);
 
     [Test]
     public void NsfwConverter_parsing_error_tests()
-        => ErrorInnerTests(new NsfwConverter());
+        => ErrorInnerTests<NsfwConverter, Nsfw>();
 
     [TestCase(Rating.G, "g")]
     [TestCase(Rating.Pg, "pg")]
@@ -121,11 +122,11 @@ public class EnumConverterTests
     [TestCase(Rating.RPlus, "r+")]
     [TestCase(Rating.Rx, "rx")]
     public void RatingConverter_tests(Rating value, string strValue)
-        => InnerTest(new RatingConverter(), value, strValue);
+        => InnerTest<RatingConverter, Rating>(value, strValue);
 
     [Test]
     public void RatingConverter_parsing_error_tests()
-        => ErrorInnerTests(new RatingConverter());
+        => ErrorInnerTests<RatingConverter, Rating>();
 
     [TestCase(ReadingStatus.Reading, "reading")]
     [TestCase(ReadingStatus.Completed, "completed")]
@@ -133,11 +134,11 @@ public class EnumConverterTests
     [TestCase(ReadingStatus.Dropped, "dropped")]
     [TestCase(ReadingStatus.PlanToRead, "plan_to_read")]
     public void ReadingStatusConverter_tests(ReadingStatus value, string strValue)
-        => InnerTest(new ReadingStatusConverter(), value, strValue);
+        => InnerTest<ReadingStatusConverter, ReadingStatus>(value, strValue);
 
     [Test]
     public void ReadingStatusConverter_parsing_error_tests()
-        => ErrorInnerTests(new ReadingStatusConverter());
+        => ErrorInnerTests<ReadingStatusConverter, ReadingStatus>();
 
     [TestCase(RelationType.Sequel, "sequel")]
     [TestCase(RelationType.Prequel, "prequel")]
@@ -151,31 +152,31 @@ public class EnumConverterTests
     [TestCase(RelationType.Character, "character")]
     [TestCase(RelationType.Other, "other")]
     public void RelationTypeConverter_tests(RelationType value, string strValue)
-        => InnerTest(new RelationTypeConverter(), value, strValue);
+        => InnerTest<RelationTypeConverter, RelationType>(value, strValue);
 
     [Test]
     public void RelationTypeConverter_parsing_error_tests()
-        => ErrorInnerTests(new RelationTypeConverter());
+        => ErrorInnerTests<RelationTypeConverter, RelationType>();
 
     [TestCase(Role.Main, "Main")]
     [TestCase(Role.Supporting, "Supporting")]
     public void RoleConverter_tests(Role value, string strValue)
-    => InnerTest(new RoleConverter(), value, strValue);
+    => InnerTest<RoleConverter, Role>(value, strValue);
 
     [Test]
     public void RoleConverter_parsing_error_tests()
-        => ErrorInnerTests(new RoleConverter());
+        => ErrorInnerTests<RoleConverter, Role>();
 
     [TestCase(Season.Winter, "winter")]
     [TestCase(Season.Spring, "spring")]
     [TestCase(Season.Summer, "summer")]
     [TestCase(Season.Fall, "fall")]
     public void SeasonConverter_tests(Season value, string strValue)
-        => InnerTest(new SeasonConverter(), value, strValue);
+        => InnerTest<SeasonConverter, Season>(value, strValue);
 
     [Test]
     public void SeasonConverter_parsing_error_tests()
-        => ErrorInnerTests(new SeasonConverter());
+        => ErrorInnerTests<SeasonConverter, Season>();
 
     [TestCase(WatchingStatus.Watching, "watching")]
     [TestCase(WatchingStatus.Completed, "completed")]
@@ -183,19 +184,27 @@ public class EnumConverterTests
     [TestCase(WatchingStatus.Dropped, "dropped")]
     [TestCase(WatchingStatus.PlanToWatch, "plan_to_watch")]
     public void WatchingStatusConverter_tests(WatchingStatus value, string strValue)
-    => InnerTest(new WatchingStatusConverter(), value, strValue);
+    => InnerTest<WatchingStatusConverter, WatchingStatus>(value, strValue);
 
     [Test]
     public void WatchingStatusConverter_parsing_error_tests()
-        => ErrorInnerTests(new WatchingStatusConverter());
+        => ErrorInnerTests<WatchingStatusConverter, WatchingStatus>();
 
     #region Internal test methods
-    static void InnerTest<T>(BaseEnumConverter<T> converter, T value, string strValue) where T : struct, Enum
+    static void InnerTest<T, U>(U value, string strValue)
+        where T : BaseEnumConverter<U>, new()
+        where U : struct, Enum
     {
-        Assert.That(converter.EnumToString(value), Is.EqualTo(strValue));
-        Assert.That(converter.StringToEnum(strValue), Is.EqualTo(value));
-        ShouldWorkWithUtf8JsonReaderAndWriter(converter, value);
-        ShouldWorkWithJsonSerializer(converter, value);
+        var formatMethod = typeof(T).GetMethod("Format", BindingFlags.Public | BindingFlags.Static, [typeof(U)]);
+        Assert.That(formatMethod, Is.Not.Null);
+        Assert.That(formatMethod!.Invoke(null, [value]), Is.EqualTo(strValue));
+
+        var parseMethod = typeof(T).GetMethod("Parse", BindingFlags.Public | BindingFlags.Static, [typeof(string)]);
+        Assert.That(parseMethod, Is.Not.Null);
+        Assert.That(parseMethod!.Invoke(null, [strValue]), Is.EqualTo(value));
+
+        ShouldWorkWithUtf8JsonReaderAndWriter(new T(), value);
+        ShouldWorkWithJsonSerializer(new T(), value);
     }
 
     static void ShouldWorkWithUtf8JsonReaderAndWriter<T>(BaseEnumConverter<T> converter, T value) where T : struct, Enum
@@ -222,22 +231,47 @@ public class EnumConverterTests
         Assert.That(deserialized, Is.EqualTo(value));
     }
 
-    static void ErrorInnerTests<T>(BaseEnumConverter<T> converter) where T : struct, Enum
+    static void ErrorInnerTests<T, U>()
+        where T : BaseEnumConverter<U>, new()
+        where U : struct, Enum
     {
-        static T GetInvalidEnumValue()
+        static U GetInvalidEnumValue()
         {
-            var values = Enum.GetValues(typeof(T)).Cast<int>().ToHashSet();
+            var values = Enum.GetValues(typeof(U)).Cast<int>().ToHashSet();
             int candidate = -1;
             while (values.Contains(candidate))
             {
                 candidate--;
             }
-            return (T)Enum.ToObject(typeof(T), candidate);
+            return (U)Enum.ToObject(typeof(U), candidate);
         }
 
-        Assert.Throws<JsonException>(() => converter.EnumToString(GetInvalidEnumValue()));
-        Assert.Throws<JsonException>(() => converter.StringToEnum(null));
-        Assert.Throws<JsonException>(() => converter.StringToEnum(""));
+        CheckExcetion(() =>
+        {
+            var formatMethod = typeof(T).GetMethod("Format", BindingFlags.Public | BindingFlags.Static, [typeof(U)]);
+            Assert.That(formatMethod, Is.Not.Null);
+            formatMethod!.Invoke(null, [GetInvalidEnumValue()]);
+        });
+
+        var parseMethod = typeof(T).GetMethod("Parse", BindingFlags.Public | BindingFlags.Static, [typeof(string)]);
+        Assert.That(parseMethod, Is.Not.Null);
+        CheckExcetion(() => parseMethod!.Invoke(null, [null]));
+        CheckExcetion(() => parseMethod!.Invoke(null, [""]));
+    }
+
+    static void CheckExcetion(Action action)
+    {
+        try
+        {
+            action();
+        }
+        catch (Exception e)
+        {
+            Assert.That(e, Is.AssignableTo<TargetInvocationException>());
+            Assert.That(e.InnerException, Is.Not.Null.And.AssignableTo<JsonException>());
+            return;
+        }
+        Assert.Fail("No error throws");
     }
     #endregion
 }

@@ -98,7 +98,7 @@ public partial class MALClient
                                                                             AnimeListFieldsBuilder? fields = null,
                                                                             [EnumeratorCancellation] CancellationToken token = default)
     {
-        var uri = new MALUriBuilder($"anime/season/{CheckPositive(year, nameof(year))}/{new SeasonConverter().EnumToString(season)}")
+        var uri = new MALUriBuilder($"anime/season/{CheckPositive(year, nameof(year))}/{SeasonConverter.Format(season)}")
             .AddSeasonalAnimeSort(sort)
             .AddLimit(limit, 500)
             .AddNsfw(nsfw)

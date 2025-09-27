@@ -21,7 +21,7 @@ public class MyMangaListStatusBuilder
     /// </summary>
     public MyMangaListStatusBuilder SetStatus(ReadingStatus status)
     {
-        _fields["status"] = new ReadingStatusConverter().EnumToString(status);
+        _fields["status"] = ReadingStatusConverter.Format(status);
         return this;
     }
 

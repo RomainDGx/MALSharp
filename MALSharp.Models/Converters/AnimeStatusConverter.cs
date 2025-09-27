@@ -5,7 +5,7 @@ namespace MALSharp.Models.Converters;
 
 public class AnimeStatusConverter : BaseEnumConverter<AnimeStatus>
 {
-    public override AnimeStatus StringToEnum(string? value) => value switch
+    public static AnimeStatus Parse(string? value) => value switch
     {
         "finished_airing" => AnimeStatus.FinishedAiring,
         "currently_airing" => AnimeStatus.CurrentlyAiring,
@@ -13,11 +13,15 @@ public class AnimeStatusConverter : BaseEnumConverter<AnimeStatus>
         _ => throw new JsonException($"Invalid value '{value ?? "null"}' for enum {typeof(AnimeStatus).Name}.")
     };
 
-    public override string EnumToString(AnimeStatus value) => value switch
+    public static string Format(AnimeStatus value) => value switch
     {
         AnimeStatus.FinishedAiring => "finished_airing",
         AnimeStatus.CurrentlyAiring => "currently_airing",
         AnimeStatus.NotYetAired => "not_yet_aired",
         _ => throw new JsonException($"Invalid value '{value}' for enum {typeof(AnimeStatus).Name}.")
     };
+
+    protected override AnimeStatus ParseCore(string? value) => Parse(value);
+
+    protected override string FormatCore(AnimeStatus value) => Format(value);
 }
