@@ -3,7 +3,7 @@ using System.Text.Json;
 
 namespace MALSharp.Models.Converters;
 
-public class AnimeTypeConverter : BaseEnumConverter<AnimeType>
+public class AnimeTypeConverter : BaseEnumConverter<AnimeType, AnimeTypeConverter>, IEnumConverter<AnimeType>
 {
     public static AnimeType Parse(string? value) => value switch
     {
@@ -34,8 +34,4 @@ public class AnimeTypeConverter : BaseEnumConverter<AnimeType>
         AnimeType.TvSpecial => "tv_special",
         _ => throw new JsonException($"Invalid value '{value}' for enum {typeof(AnimeType).Name}.")
     };
-
-    protected override AnimeType ParseCore(string? value) => Parse(value);
-
-    protected override string FormatCore(AnimeType value) => Format(value);
 }

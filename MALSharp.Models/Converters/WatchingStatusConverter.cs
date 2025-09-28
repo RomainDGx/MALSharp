@@ -3,7 +3,7 @@ using System.Text.Json;
 
 namespace MALSharp.Models.Converters;
 
-public class WatchingStatusConverter : BaseEnumConverter<WatchingStatus>
+public class WatchingStatusConverter : BaseEnumConverter<WatchingStatus, WatchingStatusConverter>, IEnumConverter<WatchingStatus>
 {
     public static WatchingStatus Parse(string? value) => value switch
     {
@@ -24,8 +24,4 @@ public class WatchingStatusConverter : BaseEnumConverter<WatchingStatus>
         WatchingStatus.PlanToWatch => "plan_to_watch",
         _ => throw new JsonException($"Invalid value '{value}' for enum {typeof(WatchingStatus).Name}.")
     };
-
-    protected override WatchingStatus ParseCore(string? value) => Parse(value);
-
-    protected override string FormatCore(WatchingStatus value) => Format(value);
 }

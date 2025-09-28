@@ -3,7 +3,7 @@ using System.Text.Json;
 
 namespace MALSharp.Models.Converters;
 
-public class DayOfTheWeekConverter : BaseEnumConverter<DayOfTheWeek>
+public class DayOfTheWeekConverter : BaseEnumConverter<DayOfTheWeek, DayOfTheWeekConverter>, IEnumConverter<DayOfTheWeek>
 {
     public static DayOfTheWeek Parse(string? value) => value switch
     {
@@ -30,8 +30,4 @@ public class DayOfTheWeekConverter : BaseEnumConverter<DayOfTheWeek>
         DayOfTheWeek.Other => "other",
         _ => throw new JsonException($"Invalid value '{value}' for enum {typeof(DayOfTheWeek).Name}.")
     };
-
-    protected override DayOfTheWeek ParseCore(string? value) => Parse(value);
-
-    protected override string FormatCore(DayOfTheWeek value) => Format(value);
 }

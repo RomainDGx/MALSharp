@@ -3,7 +3,7 @@ using System.Text.Json;
 
 namespace MALSharp.Models.Converters;
 
-public class AnimeSourceConverter : BaseEnumConverter<AnimeSource>
+public class AnimeSourceConverter : BaseEnumConverter<AnimeSource, AnimeSourceConverter>, IEnumConverter<AnimeSource>
 {
     public static AnimeSource Parse(string? value) => value switch
     {
@@ -46,8 +46,4 @@ public class AnimeSourceConverter : BaseEnumConverter<AnimeSource>
         AnimeSource.MixedMedia => "mixed_media",
         _ => throw new JsonException($"Invalid value '{value}' for enum {typeof(AnimeSource).Name}.")
     };
-
-    protected override AnimeSource ParseCore(string? value) => Parse(value);
-
-    protected override string FormatCore(AnimeSource value) => Format(value);
 }

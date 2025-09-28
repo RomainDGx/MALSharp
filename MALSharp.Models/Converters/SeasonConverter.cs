@@ -3,7 +3,7 @@ using System.Text.Json;
 
 namespace MALSharp.Models.Converters;
 
-public class SeasonConverter : BaseEnumConverter<Season>
+public class SeasonConverter : BaseEnumConverter<Season, SeasonConverter>, IEnumConverter<Season>
 {
     public static Season Parse(string? value) => value switch
     {
@@ -22,8 +22,4 @@ public class SeasonConverter : BaseEnumConverter<Season>
         Season.Fall => "fall",
         _ => throw new JsonException($"Invalid value '{value}' for enum {typeof(Season).Name}.")
     };
-
-    protected override Season ParseCore(string? value) => Parse(value);
-
-    protected override string FormatCore(Season value) => Format(value);
 }

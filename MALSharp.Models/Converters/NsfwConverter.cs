@@ -3,7 +3,7 @@ using System.Text.Json;
 
 namespace MALSharp.Models.Converters;
 
-public class NsfwConverter : BaseEnumConverter<Nsfw>
+public class NsfwConverter : BaseEnumConverter<Nsfw, NsfwConverter>, IEnumConverter<Nsfw>
 {
     public static Nsfw Parse(string? value) => value switch
     {
@@ -20,8 +20,4 @@ public class NsfwConverter : BaseEnumConverter<Nsfw>
         Nsfw.Black => "black",
         _ => throw new JsonException($"Invalid value '{value}' for enum {typeof(Nsfw).Name}.")
     };
-
-    protected override Nsfw ParseCore(string? value) => Parse(value);
-
-    protected override string FormatCore(Nsfw value) => Format(value);
 }

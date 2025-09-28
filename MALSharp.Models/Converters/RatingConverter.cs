@@ -3,7 +3,7 @@ using System.Text.Json;
 
 namespace MALSharp.Models.Converters;
 
-public class RatingConverter : BaseEnumConverter<Rating>
+public class RatingConverter : BaseEnumConverter<Rating, RatingConverter>, IEnumConverter<Rating>
 {
     public static Rating Parse(string? value) => value switch
     {
@@ -26,8 +26,4 @@ public class RatingConverter : BaseEnumConverter<Rating>
         Rating.Rx => "rx",
         _ => throw new JsonException($"Invalid value '{value}' for enum {typeof(Rating).Name}.")
     };
-
-    protected override Rating ParseCore(string? value) => Parse(value);
-
-    protected override string FormatCore(Rating value) => Format(value);
 }

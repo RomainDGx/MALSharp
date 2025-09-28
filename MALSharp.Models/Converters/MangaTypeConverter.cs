@@ -3,7 +3,7 @@ using System.Text.Json;
 
 namespace MALSharp.Models.Converters;
 
-public class MangaTypeConverter : BaseEnumConverter<MangaType>
+public class MangaTypeConverter : BaseEnumConverter<MangaType, MangaTypeConverter>, IEnumConverter<MangaType>
 {
     public static MangaType Parse(string? value) => value switch
     {
@@ -32,8 +32,4 @@ public class MangaTypeConverter : BaseEnumConverter<MangaType>
         MangaType.LightNovel => "light_novel",
         _ => throw new JsonException($"Invalid value '{value}' for enum {typeof(MangaType).Name}.")
     };
-
-    protected override MangaType ParseCore(string? value) => Parse(value);
-
-    protected override string FormatCore(MangaType value) => Format(value);
 }

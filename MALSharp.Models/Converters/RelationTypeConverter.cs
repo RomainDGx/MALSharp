@@ -3,7 +3,7 @@ using System.Text.Json;
 
 namespace MALSharp.Models.Converters;
 
-public class RelationTypeConverter : BaseEnumConverter<RelationType>
+public class RelationTypeConverter : BaseEnumConverter<RelationType, RelationTypeConverter>, IEnumConverter<RelationType>
 {
     public static RelationType Parse(string? value) => value switch
     {
@@ -36,8 +36,4 @@ public class RelationTypeConverter : BaseEnumConverter<RelationType>
         RelationType.Other => "other",
         _ => throw new JsonException($"Invalid value '{value}' for enum {typeof(RelationType).Name}.")
     };
-
-    protected override RelationType ParseCore(string? value) => Parse(value);
-
-    protected override string FormatCore(RelationType value) => Format(value);
 }

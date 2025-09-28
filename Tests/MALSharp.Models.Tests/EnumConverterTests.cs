@@ -6,7 +6,6 @@ using NUnit.Framework;
 using System;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text.Json;
 
 namespace MALSharp.Models.Tests;
@@ -191,23 +190,20 @@ public class EnumConverterTests
         => ErrorInnerTests<WatchingStatusConverter, WatchingStatus>();
 
     #region Internal test methods
-    static void InnerTest<T, U>(U value, string strValue)
-        where T : BaseEnumConverter<U>, new()
-        where U : struct, Enum
+    static void InnerTest<T, V>(V value, string strValue)
+        where T : BaseEnumConverter<V, T>, IEnumConverter<V>, new()
+        where V : struct, Enum
     {
-        var formatMethod = typeof(T).GetMethod("Format", BindingFlags.Public | BindingFlags.Static, [typeof(U)]);
-        Assert.That(formatMethod, Is.Not.Null);
-        Assert.That(formatMethod!.Invoke(null, [value]), Is.EqualTo(strValue));
-
-        var parseMethod = typeof(T).GetMethod("Parse", BindingFlags.Public | BindingFlags.Static, [typeof(string)]);
-        Assert.That(parseMethod, Is.Not.Null);
-        Assert.That(parseMethod!.Invoke(null, [strValue]), Is.EqualTo(value));
+        Assert.That(T.Format(value), Is.EqualTo(strValue));
+        Assert.That(T.Parse(strValue), Is.EqualTo(value));
 
         ShouldWorkWithUtf8JsonReaderAndWriter(new T(), value);
         ShouldWorkWithJsonSerializer(new T(), value);
     }
 
-    static void ShouldWorkWithUtf8JsonReaderAndWriter<T>(BaseEnumConverter<T> converter, T value) where T : struct, Enum
+    static void ShouldWorkWithUtf8JsonReaderAndWriter<T, V>(T converter, V value)
+        where T : BaseEnumConverter<V, T>, IEnumConverter<V>
+        where V : struct, Enum
     {
         var options = new JsonSerializerOptions();
         using var stream = new MemoryStream();
@@ -219,59 +215,38 @@ public class EnumConverterTests
         var reader = new Utf8JsonReader(stream.ToArray());
         Assert.That(reader.Read(), Is.True);
         Assert.That(reader.TokenType, Is.EqualTo(JsonTokenType.String));
-        Assert.That(converter.Read(ref reader, typeof(T), options), Is.EqualTo(value));
+        Assert.That(converter.Read(ref reader, typeof(V), options), Is.EqualTo(value));
     }
 
-    static void ShouldWorkWithJsonSerializer<T>(BaseEnumConverter<T> converter, T value) where T : struct, Enum
+    static void ShouldWorkWithJsonSerializer<T, V>(T converter, V value)
+        where T : BaseEnumConverter<V, T>, IEnumConverter<V>
+        where V : struct, Enum
     {
         var options = new JsonSerializerOptions();
         options.Converters.Add(converter);
         var json = JsonSerializer.Serialize(value, options);
-        var deserialized = JsonSerializer.Deserialize<T>(json, options);
+        var deserialized = JsonSerializer.Deserialize<V>(json, options);
         Assert.That(deserialized, Is.EqualTo(value));
     }
 
-    static void ErrorInnerTests<T, U>()
-        where T : BaseEnumConverter<U>, new()
-        where U : struct, Enum
+    static void ErrorInnerTests<T, V>()
+        where T : BaseEnumConverter<V, T>, IEnumConverter<V>
+        where V : struct, Enum
     {
-        static U GetInvalidEnumValue()
+        static V GetInvalidEnumValue()
         {
-            var values = Enum.GetValues(typeof(U)).Cast<int>().ToHashSet();
+            var values = Enum.GetValues(typeof(V)).Cast<int>().ToHashSet();
             int candidate = -1;
             while (values.Contains(candidate))
             {
                 candidate--;
             }
-            return (U)Enum.ToObject(typeof(U), candidate);
+            return (V)Enum.ToObject(typeof(V), candidate);
         }
 
-        CheckExcetion(() =>
-        {
-            var formatMethod = typeof(T).GetMethod("Format", BindingFlags.Public | BindingFlags.Static, [typeof(U)]);
-            Assert.That(formatMethod, Is.Not.Null);
-            formatMethod!.Invoke(null, [GetInvalidEnumValue()]);
-        });
-
-        var parseMethod = typeof(T).GetMethod("Parse", BindingFlags.Public | BindingFlags.Static, [typeof(string)]);
-        Assert.That(parseMethod, Is.Not.Null);
-        CheckExcetion(() => parseMethod!.Invoke(null, [null]));
-        CheckExcetion(() => parseMethod!.Invoke(null, [""]));
-    }
-
-    static void CheckExcetion(Action action)
-    {
-        try
-        {
-            action();
-        }
-        catch (Exception e)
-        {
-            Assert.That(e, Is.AssignableTo<TargetInvocationException>());
-            Assert.That(e.InnerException, Is.Not.Null.And.AssignableTo<JsonException>());
-            return;
-        }
-        Assert.Fail("No error throws");
+        Assert.Throws<JsonException>(() => T.Format(GetInvalidEnumValue()));
+        Assert.Throws<JsonException>(() => T.Parse(null));
+        Assert.Throws<JsonException>(() => T.Parse(""));
     }
     #endregion
 }

@@ -3,7 +3,7 @@ using System.Text.Json;
 
 namespace MALSharp.Models.Converters;
 
-public class MangaStatusConverter : BaseEnumConverter<MangaStatus>
+public class MangaStatusConverter : BaseEnumConverter<MangaStatus, MangaStatusConverter>, IEnumConverter<MangaStatus>
 {
     public static MangaStatus Parse(string? value) => value switch
     {
@@ -20,8 +20,4 @@ public class MangaStatusConverter : BaseEnumConverter<MangaStatus>
         MangaStatus.NotYetPublished => "not_yet_published",
         _ => throw new JsonException($"Invalid value '{value}' for enum {typeof(MangaStatus).Name}.")
     };
-
-    protected override MangaStatus ParseCore(string? value) => Parse(value);
-
-    protected override string FormatCore(MangaStatus value) => Format(value);
 }

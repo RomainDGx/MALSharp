@@ -3,7 +3,7 @@ using System.Text.Json;
 
 namespace MALSharp.Models.Converters;
 
-public class RoleConverter : BaseEnumConverter<Role>
+public class RoleConverter : BaseEnumConverter<Role, RoleConverter>, IEnumConverter<Role>
 {
     public static Role Parse(string? value) => value switch
     {
@@ -18,8 +18,4 @@ public class RoleConverter : BaseEnumConverter<Role>
         Role.Supporting => "Supporting",
         _ => throw new JsonException($"Invalid value '{value}' for enum {typeof(Role).Name}.")
     };
-
-    protected override Role ParseCore(string? value) => Parse(value);
-
-    protected override string FormatCore(Role value) => Format(value);
 }
