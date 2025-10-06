@@ -19,7 +19,10 @@ public static class HostApplicationBuilderExtensions
 
         builder.ConfigureServices((ctx, services) =>
         {
-            services.AddMALClient(options => ApplyConfiguration(ctx.Configuration, options));
+            services.AddMALClient(options =>
+            {
+                ApplyConfiguration(ctx.Configuration, options);
+            });
         });
         return builder;
     }
@@ -34,6 +37,7 @@ public static class HostApplicationBuilderExtensions
     public static IHostBuilder UseMALClient(this IHostBuilder builder, Action<MALClientOptions> configureOptions)
     {
         ArgumentNullException.ThrowIfNull(builder);
+        ArgumentNullException.ThrowIfNull(configureOptions);
 
         builder.ConfigureServices((ctx, services) =>
         {
@@ -58,7 +62,10 @@ public static class HostApplicationBuilderExtensions
     {
         ArgumentNullException.ThrowIfNull(builder);
 
-        builder.Services.AddMALClient(options => ApplyConfiguration(builder.Configuration, options));
+        builder.Services.AddMALClient(options =>
+        {
+            ApplyConfiguration(builder.Configuration, options);
+        });
 
         return builder;
     }
@@ -75,6 +82,7 @@ public static class HostApplicationBuilderExtensions
     public static T UseMALClient<T>(this T builder, Action<MALClientOptions> configureOptions) where T : IHostApplicationBuilder
     {
         ArgumentNullException.ThrowIfNull(builder);
+        ArgumentNullException.ThrowIfNull(configureOptions);
 
         builder.Services.AddMALClient(options =>
         {
@@ -121,6 +129,16 @@ public static class HostApplicationBuilderExtensions
                 throw new ArgumentException("Invalid value for MALClient:ClientId in configuration.");
             }
             options.ClientId = clientId;
+        }
+
+        var clientSecret = section["ClientSecret"];
+        if (clientSecret is not null)
+        {
+            if (string.IsNullOrWhiteSpace(clientSecret))
+            {
+                throw new ArgumentException("Invalid value for MALClient:ClientSecret in configuration.");
+            }
+            options.ClientSecret = clientSecret;
         }
 
         var baseUrl = section["BaseUrl"];

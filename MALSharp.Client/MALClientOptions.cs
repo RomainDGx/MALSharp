@@ -34,6 +34,11 @@ public class MALClientOptions
     public string ClientId { get; set; } = string.Empty;
 
     /// <summary>
+    /// Your MyAnimeList client secret, to send request to the MyAnimeList API.
+    /// </summary>
+    public string? ClientSecret { get; set; }
+
+    /// <summary>
     /// The base URL of the MyAnimeList API. Defaults to https://api.myanimelist.net/v2/. MUST end with a '/'.
     /// </summary>
     public string BaseUrl { get; set; } = "https://api.myanimelist.net/v2/";
