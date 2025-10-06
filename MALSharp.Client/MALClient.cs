@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
@@ -106,37 +107,72 @@ public sealed partial class MALClient : IMALClient, IDisposable
 
     async Task<T> ExecuteRequestAsync<T>(HttpMethod method, string uri, CancellationToken token, HttpContent? content = null)
     {
-        using var request = await BuildRequestAsync(method, uri, token, content).ConfigureAwait(false);
-
-        _logger?.LogDebug("Sending HTTP request: {Method} {Uri}", method, uri);
-
-        using var response = await _http.SendAsync(request, token).ConfigureAwait(false);
-
-        _logger?.LogDebug("Received HTTP response: {StatusCode} {Uri}", response.StatusCode, uri);
-
-        await EnsureSuccessResponseAsync(response, token).ConfigureAwait(false);
-
-        var result = await response.Content.ReadFromJsonAsync<T>(_serializationOptions, token).ConfigureAwait(false);
-
-        if (result is null)
+        var retry = false;
+        T? result = default;
+        do
         {
-            _logger?.LogError("Failed to deserialize response for: {Uri}", uri);
-            throw new MALClientException(response.StatusCode, null, "An error has occured while parsing response content.");
+            using var request = await BuildRequestAsync(method, uri, token, content).ConfigureAwait(false);
+
+            _logger?.LogDebug("Sending HTTP request: {Method} {Uri}", method, uri);
+
+            using var response = await _http.SendAsync(request, token).ConfigureAwait(false);
+
+            _logger?.LogDebug("Received HTTP response: {StatusCode} {Uri}", response.StatusCode, uri);
+
+            if (!retry && response.StatusCode is HttpStatusCode.Unauthorized && _accessTokenProvider is not null)
+            {
+                _logger?.LogInformation("Refresh access token.");
+
+                retry = await _accessTokenProvider.RefreshAccessTokenAsync(token).ConfigureAwait(false);
+                if (retry)
+                {
+                    continue;
+                }
+                _logger?.LogWarning("Could not refresh access token.");
+            }
+
+            await EnsureSuccessResponseAsync(response, token).ConfigureAwait(false);
+
+            result = await response.Content.ReadFromJsonAsync<T>(_serializationOptions, token).ConfigureAwait(false);
+            if (result is null)
+            {
+                _logger?.LogError("Failed to deserialize response for: {Uri}", uri);
+                throw new MALClientException(response.StatusCode, null, "An error has occured while parsing response content.");
+            }
         }
-        return result;
+        while (retry);
+
+        return result!;
     }
 
     async Task ExecuteRequestAsync(HttpMethod method, string uri, CancellationToken token)
     {
-        using var request = await BuildRequestAsync(method, uri, token).ConfigureAwait(false);
+        var retry = false;
+        do
+        {
+            using var request = await BuildRequestAsync(method, uri, token).ConfigureAwait(false);
 
-        _logger?.LogDebug("Sending HTTP request: {Method} {Uri}", method, uri);
+            _logger?.LogDebug("Sending HTTP request: {Method} {Uri}", method, uri);
 
-        using var response = await _http.SendAsync(request, token).ConfigureAwait(false);
+            using var response = await _http.SendAsync(request, token).ConfigureAwait(false);
 
-        _logger?.LogDebug("Received HTTP response: {StatusCode} {Uri}", response.StatusCode, uri);
+            _logger?.LogDebug("Received HTTP response: {StatusCode} {Uri}", response.StatusCode, uri);
 
-        await EnsureSuccessResponseAsync(response, token).ConfigureAwait(false);
+            if (!retry && response.StatusCode is HttpStatusCode.Unauthorized && _accessTokenProvider is not null)
+            {
+                _logger?.LogInformation("Refresh access token.");
+
+                retry = await _accessTokenProvider.RefreshAccessTokenAsync(token).ConfigureAwait(false);
+                if (retry)
+                {
+                    continue;
+                }
+                _logger?.LogWarning("Could not refresh access token.");
+            }
+
+            await EnsureSuccessResponseAsync(response, token).ConfigureAwait(false);
+        }
+        while (retry);
     }
 
     async Task<HttpRequestMessage> BuildRequestAsync(HttpMethod method, string uri, CancellationToken token, HttpContent? content = null)
@@ -164,20 +200,22 @@ public sealed partial class MALClient : IMALClient, IDisposable
 
     async Task EnsureSuccessResponseAsync(HttpResponseMessage response, CancellationToken token)
     {
-        if (!response.IsSuccessStatusCode)
+        if (response.IsSuccessStatusCode)
         {
-            _logger?.LogWarning("Non-success status code received: {StatusCode}", response.StatusCode);
-
-            var error = await response.Content.ReadFromJsonAsync<ErrorResponse>(_serializationOptions, token).ConfigureAwait(false);
-
-            if (error is not null)
-            {
-                _logger?.LogError("API returned error: {Error} - {Message}", error.Error, error.Message);
-                throw new MALClientException(response.StatusCode, error.Error, error.Message);
-            }
-            _logger?.LogError("API returned non-success status code with unparseable body");
-            throw new MALClientException(response.StatusCode, null, "An error has occured while parsing response error content.");
+            return;
         }
+
+        _logger?.LogWarning("Non-success status code received: {StatusCode}", response.StatusCode);
+
+        var error = await response.Content.ReadFromJsonAsync<ErrorResponse>(_serializationOptions, token).ConfigureAwait(false);
+
+        if (error is not null)
+        {
+            _logger?.LogError("API returned error: {Error} - {Message}", error.Error, error.Message);
+            throw new MALClientException(response.StatusCode, error.Error, error.Message);
+        }
+        _logger?.LogError("API returned non-success status code with unparseable body");
+        throw new MALClientException(response.StatusCode, null, "An error has occured while parsing response error content.");
     }
 
     static string CheckPositive(int value, string paramName)

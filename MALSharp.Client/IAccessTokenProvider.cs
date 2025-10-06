@@ -9,12 +9,22 @@ namespace MALSharp.Client;
 public interface IAccessTokenProvider
 {
     /// <summary>
-    /// Asynchronously retrieves a valid access token for the current context.
+    /// Retrieves a valid access token for the current context.
     /// </summary>
     /// <param name="token">A token to cancel the operation.</param>
     /// <returns>
-    /// A task representing the asynchronous operation. The result contains the access token string,
+    /// The result contains the access token string,
     /// or <c>null</c> if no token is available in the current context.
     /// </returns>
     Task<string?> GetAccessTokenAsync(CancellationToken token = default);
+
+    /// <summary>
+    /// Refreshes the access token for the current context.
+    /// </summary>
+    /// <param name="token">A token to cancel the operation.</param>
+    /// <returns>
+    /// The result is <c>true</c> if the refresh succeeded and a new access token was obtained,
+    /// or <c>false</c> if the refresh failed.
+    /// </returns>
+    Task<bool> RefreshAccessTokenAsync(CancellationToken token = default);
 }
