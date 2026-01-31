@@ -164,4 +164,10 @@ public class Anime : Node
     /// </summary>
     [JsonPropertyName("videos")]
     public List<Video>? Videos { get; set; }
+
+    [JsonPropertyName("opening_themes")]
+    public List<Song>? Openings { get; set; }
+
+    [JsonPropertyName("ending_themes")]
+    public List<Song>? Endings { get; set; }
 }

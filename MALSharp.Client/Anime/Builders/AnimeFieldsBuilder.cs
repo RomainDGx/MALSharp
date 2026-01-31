@@ -292,6 +292,18 @@ public class AnimeFieldsBuilder : IFieldsBuilder
         return this;
     }
 
+    public AnimeFieldsBuilder AddOpenings()
+    {
+        _fields.Add("opening_themes");
+        return this;
+    }
+
+    public AnimeFieldsBuilder AddEndings()
+    {
+        _fields.Add("ending_themes");
+        return this;
+    }
+
     /// <summary>
     /// Add all fields of <see cref="Models.Anime.Anime"/>.
     /// </summary>
@@ -326,7 +338,9 @@ public class AnimeFieldsBuilder : IFieldsBuilder
               .AddRelatedManga().AddAll().Parent
               .AddRecommendations().AddAll().Parent
               .AddStatistics()
-              .AddVideos();
+              .AddVideos()
+              .AddOpenings()
+              .AddEndings();
     }
 
     /// <summary>
